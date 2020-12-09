@@ -1,10 +1,15 @@
 import React from "react";
-import './App.css';
+import Header from './Header';
+import Middle from './Middle';
+import Left from './Left';
+//import './App.css';
 
 function App() {
   return (
     <div>
-      <h1>Strongknot</h1>
+      <header><Header /></header>
+      <div><Left /></div>
+      <div><Middle /></div>
     </div>
   );
 }
