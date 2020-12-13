@@ -6,6 +6,8 @@
 .pnp.js
 .idea
 node_modules
+process.env
+.process.env
 
 # testing
 /coverage
