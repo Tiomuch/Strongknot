@@ -6,6 +6,7 @@
 .pnp.js
 .idea
 node_modules
+node_modules/
 process.env
 .process.env
 
