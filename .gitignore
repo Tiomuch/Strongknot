@@ -7,8 +7,6 @@ front/node_modules
 .pnp.js
 .idea
 node_modules
-api/node_modules
-front/node_modules
 
 # testing
 /coverage
