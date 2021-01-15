@@ -1,11 +1,16 @@
-//import './App.css';
+import React from 'react'
+import Header from './Header'
+import Middle from './Middle'
+import Left from './Left'
 
-function App() {
+function App () {
   return (
     <div>
-      <h1>Strongknot</h1>
+      <header><Header /></header>
+      <div><Left /></div>
+      <div><Middle /></div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
