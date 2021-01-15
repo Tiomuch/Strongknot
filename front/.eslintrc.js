@@ -1,12 +1,13 @@
 module.exports = {
+    "parser": "babel-eslint",
     "env": {
         "browser": true,
         "es2021": true,
         "node": true
     },
     "extends": [
-        "plugin:react/recommended",
-        "standard"
+      "plugin:react/recommended",
+      "standard"
     ],
     "parserOptions": {
         "ecmaFeatures": {
