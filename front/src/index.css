@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.header-button {
+  display: inline-block;
+  text-align: center;
+  color: black;
+  background-color: aqua;
+}
+
+.component {
+  display: inline-block;
+  background-color: gold;
+  color: black;
+}

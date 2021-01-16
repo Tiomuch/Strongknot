@@ -2,9 +2,7 @@ import React from 'react'
 
 function article () {
   return (
-    <div>
-
-    </div>
+    <div>Article</div>
   )
 }
 
