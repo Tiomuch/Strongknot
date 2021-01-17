@@ -1,57 +1,55 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from './Header'
 import Middle from './Middle'
 import Left from './Left'
 import Article from './ForHeader/Article'
-import AddArticle from './ForHeader/AddArticle'
-import Profile from './ForHeader/Profile'
+import AddArticle from './ForHeader/AddArticle' // eslint-disable-line no-unused-vars
+import Profile from './ForHeader/Profile' // eslint-disable-line no-unused-vars
 import PropTypes from 'prop-types'
 import ErrorBoundary from './ErrorBoundary'
 
-class App extends React.Component {
-  state = {
-    headersElement: Article,
-    temporaryAdd: AddArticle, // это для того что бы Eslint не ругался и дал запустить страничку
-    temporaryP: Profile, // это тоже для ESlint
-    fullName: 'Profile'
-  };
+function App () {
+  const [headersElement, setHeadersElement] = useState(<Article />)
+  const [name, setName] = useState('none') // eslint-disable-line no-unused-vars
+  const [secondName, setSecondName] = useState('none') // eslint-disable-line no-unused-vars
+  const [profile, setProfile] = useState('Profile')
 
-  updateData = (value) => {
-    this.setState({ headersElement: value })
+  const updateData = (value) => {
+    setHeadersElement(value)
   }
 
-  updateProfile = (value) => {
-    this.setState({ fullName: 'Profile (' + value + ')' })
+  const updateProfile = (userName, userSecondName) => {
+    setName(userName)
+    setSecondName(userSecondName)
+    setProfile('Profile (' + userName + ' ' + userSecondName + ')')
   }
 
-  render () {
-    return (
-      <>
-        <ErrorBoundary>
-        <header><Header updateData={this.updateData} name={this.state.fullName} /></header>
-        </ErrorBoundary>
+  return (
+    <>
       <ErrorBoundary>
-        <div className="component"><Left /></div>
+      <header><Header updateData={updateData} name={profile} updateProfile={updateProfile} /></header>
       </ErrorBoundary>
-      <ErrorBoundary>
-        <div className="component"><Middle /></div>
-      </ErrorBoundary>
-      <ErrorBoundary>
-        <div className="component"><this.state.headersElement updateProfile={this.updateProfile} /></div>
-      </ErrorBoundary>
-      </>
-    )
-  }
+    <ErrorBoundary>
+      <div className="component"><Left /></div>
+    </ErrorBoundary>
+    <ErrorBoundary>
+      <div className="component"><Middle /></div>
+    </ErrorBoundary>
+    <ErrorBoundary>
+      <div className="component">{headersElement}</div>
+    </ErrorBoundary>
+    </>
+  )
 }
 
 App.propTypes = {
-  optionalArray: PropTypes.array,
-  optionalBool: PropTypes.bool,
   optionalFunc: PropTypes.func,
-  optionalNumber: PropTypes.number,
-  optionalObject: PropTypes.object,
-  optionalString: PropTypes.string,
-  optionalSymbol: PropTypes.symbol
+  optionalString: PropTypes.string
+}
+
+App.defaultProps = {
+  profile: 'Profile',
+  headersElement: <Article />
 }
 
 export default App

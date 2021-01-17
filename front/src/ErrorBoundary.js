@@ -28,7 +28,7 @@ class ErrorBoundary extends React.Component {
 
 ErrorBoundary.propTypes = {
   updateProfile: PropTypes.func,
-  children: PropTypes.node.isRequired
+  children: PropTypes.element.isRequired
 }
 
 export default ErrorBoundary
