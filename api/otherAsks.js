@@ -2,9 +2,9 @@ let express = require('express');
 let router = express.Router();
 const db = require('./forDB.js');
 
-router.get('/', async(rec, res)=> {
+/*router.get('/', async(rec, res)=> {
   res.send(db.select().from('./db/users'));
-});
+});*/
 
 router.use( (req, res, next) => {
   console.log('We are in');
