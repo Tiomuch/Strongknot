@@ -9,6 +9,7 @@ front/node_modules
 node_modules
 process.env
 .process.env
+.env
 api/node_modules
 front/node_modules
 
