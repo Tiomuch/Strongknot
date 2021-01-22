@@ -1,5 +1,8 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json())
 
 const envy = require('./mainClass.js')
 envy.get()
@@ -23,4 +26,4 @@ function errorHandler(err, req, res, next) {
 
 app.listen(3000, () => {
   console.log("App server started!")
-});
+})
