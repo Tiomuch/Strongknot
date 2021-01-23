@@ -2,8 +2,9 @@ const express = require('express')
 const router = express.Router()
 require('dotenv').config()
 const db = require('./forDB.js')
+const passport = require('passport')
 
-router.get('/', async (rec, res)=> {
+router.get('/', passport.authenticate('jwt', {session: false}), async (rec, res)=> {
   const users = await db('users').select('*')
   res.json(users)
 })

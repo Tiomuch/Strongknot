@@ -1,6 +1,10 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const passport = require('passport')
+
+app.use(passport.initialize())
+require('./forPassport/passport')(passport)
 
 app.use(bodyParser.json())
 
@@ -11,10 +15,10 @@ const authRoutes = require('./routes/auth')
 app.use('/api/auth', authRoutes)
 
 const postRoutes = require('./routes/Routing.js')
-app.use(express.static('/public'), postRoutes)
+app.use('/api/posts', postRoutes)
 
 const other = require('./routes/otherAsks.js')
-app.use(express.static('/public'), other)
+app.use('/api/other', other)
 
 function errorHandler(err, req, res, next) {
   if (res.headersSent) {
