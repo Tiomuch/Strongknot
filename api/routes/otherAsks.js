@@ -3,7 +3,7 @@ const router = express.Router()
 require('dotenv').config()
 const db = require('./forDB.js')
 
-router.get('/', async(rec, res)=> {
+router.get('/', async (rec, res)=> {
   const users = await db('users').select('*')
   res.json(users)
 })

@@ -1,5 +1,4 @@
-require('dotenv').config()
-const knex = require('knex')({client: 'pg'})
+const db = require('../routes/forDB')
 
 module.exports.login  = (req, res) => {
   res.status(200).json({
@@ -10,12 +9,12 @@ module.exports.login  = (req, res) => {
   })
 }
 
-module.exports.register = (req, res) => {
+module.exports.register = async (req, res) => {
   // knex('users').where('email', '=', req.body.email)
-  knex('users').insert({
+  db('users').insert({
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     email: req.body.email,
     password: req.body.password
-  }).then(() => console.log('User in'))
+  }).then(() => console.log('User created'))
 }

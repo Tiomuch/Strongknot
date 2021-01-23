@@ -1,4 +1,6 @@
-module.export = require('knex')({
+require('dotenv').config()
+
+module.exports = require('knex')({
   client: 'pg',
   connection: {
     host: process.env.DB_HOST,
