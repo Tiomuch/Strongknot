@@ -3,8 +3,7 @@ const mailer = require('../routes/nodemailer')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 require('dotenv').config()
-const number = Math.floor(Math.random() * (9999 - 1000)) + 1000
-const activated = false
+let number
 
 module.exports.login  = async (req, res) => {
   const person = await db('users').where({email: req.body.email}).first()
@@ -40,8 +39,12 @@ module.exports.login  = async (req, res) => {
 module.exports.check  = async (req, res) => {
   const person = await db('users').where({email: req.body.email}).first()
   if (person) {
-    if(req.body.key === number){
-      person.update({activated: true})
+    if(Number(req.body.code) === number){
+      await db('users').where({email: req.body.email}).update({activated: true})
+
+      res.status(202).json({
+        message: 'Почта подтверждена'
+      })
     } else {
       res.status(400).json({
         message: 'Неверный код'
@@ -69,23 +72,22 @@ module.exports.register = async (req, res) => {
         first_name: req.body.first_name,
         last_name: req.body.last_name,
         email: req.body.email,
-        password: bcrypt.hashSync(pass, salt),
-        activated: activated
+        password: bcrypt.hashSync(pass, salt)
       })
+
+      number = Math.floor(Math.random() * (9999 - 1000)) + 1000
 
       const message = {
         from: 'nekryto@ukr.net',
         to: req.body.email,
         subject: 'Congratulation! This is the next step for your registration',
-        html: `<h2>Поздравляем, Вы прошли первый этап регистрации на нашем сайте</h2>
+        text: `Поздравляем, Вы прошли первый этап регистрации на нашем сайте
         
-        <i>Данные для следующего этапа:</i>
-        <ul>
-            <li>login: ${req.body.email}</li>
-            <li>code: ${number}</li>
-        </ul>
+        Данные для следующего этапа:
+        email: ${req.body.email}
+        code: ${number}
         
-        <p>Вот ссылка: http://${process.env.HOST}:${process.env.PORT}/api/auth/check</p>`
+        Вот ссылка: http://${process.env.HOST}:${process.env.PORT}/api/auth/check`
       }
 
       mailer(message)

@@ -2,22 +2,22 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const passport = require('passport')
+const envy = require('./mainClass.js')
+const authRoutes = require('./routes/auth')
+const postRoutes = require('./routes/Routing.js')
+const other = require('./routes/otherAsks.js')
 
 app.use(passport.initialize())
 require('./forPassport/passport')(passport)
 
 app.use(bodyParser.json())
 
-const envy = require('./mainClass.js')
 envy.get()
 
-const authRoutes = require('./routes/auth')
 app.use('/api/auth', authRoutes)
 
-const postRoutes = require('./routes/Routing.js')
 app.use('/api/posts', postRoutes)
 
-const other = require('./routes/otherAsks.js')
 app.use('/api/other', other)
 
 function errorHandler(err, req, res, next) {
