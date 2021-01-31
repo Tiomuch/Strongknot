@@ -13,7 +13,11 @@ module.exports.login  = async (req, res) => {
       if (passwordResult) {
         const token = jwt.sign({
           email: person.email,
-          userID: person.id
+          userID: person.id,
+          first_name: person.first_name,
+          last_name: person.last_name,
+          password: person.password,
+          activated: person.activated
         }, process.env.JWT_KEY, {expiresIn: 3600})
 
         res.status(200).json({

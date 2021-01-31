@@ -16,6 +16,8 @@ envy.get()
 
 app.use('/api/auth', authRoutes)
 
+app.use(passport.authenticate('jwt', {session: false}))
+
 app.use('/api/posts', postRoutes)
 
 app.use('/api/other', other)
