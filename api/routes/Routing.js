@@ -1,29 +1,36 @@
-let express = require('express');
-let router = express.Router();
+const express = require('express')
+const router = express.Router()
+require('dotenv').config()
+const authGetPost = require('../routes/userOwnPost')
+const userID = 'id'
+const table = 'posts'
+const postID = 'userID'
 
-router.use( (req, res, next) => {
-  console.log('We are in routing');
-  next();
-});
+router.get('/all', async (req, res) => {
+  const posts = await db('posts').select('*')
+  res.json(posts)
+})
 
-router.get('/posts', function(req, res) {
-  //View all posts
-});
-
-router.get('/posts/:id', function(req, res) {
-  //View one current post
-});
-
-router.post('/posts', function(req, res) {
+router.post('/create', (req, res) => {
   //Create new post
-});
+})
 
-router.put('/posts/:id', function(req, res) {
+router.get('/:id', (req, res) => {
+  //View one current post
+})
+
+// router.use(authGetPost)
+
+router.put('/edit-post/:id', [authGetPost(userID, table, postID)], (req, res) => {
+  //console.log(req.user[0])
+  res.json({
+    message: 'you can edit post'
+  })
   //Edit current post
-});
+})
 
-router.delete('/posts/:id', function(req, res) {
+router.delete('/delete-post/:id', (req, res) => {
   //Delete current post
-});
+})
 
-module.exports = router;
+module.exports = router
