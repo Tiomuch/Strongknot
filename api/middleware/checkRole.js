@@ -1,14 +1,16 @@
-const authRole = () => {
-  return async (req, res, next) => {
-    if(!(req.user[0].role === 'admin')){
-      res.status(401)
-      return res.json({
-        message: 'Not allowed'
-      })
-    }
-
-    next()
+const Role = {
+  admin : {
+    updateAnyPost: true,
+    updateOwnPost: true,
+    deleteAnyPost: true,
+    deleteOwnPost: true
+  },
+  basic : {
+    updateAnyPost: false,
+    updateOwnPost: true,
+    deleteAnyPost: false,
+    deleteOwnPost: true
   }
 }
 
-module.exports = authRole
+module.exports = Role
