@@ -13,10 +13,10 @@ const checkOwnEntity = (obj, user, element) => {
 
 const authGetEntity = (array) => {
   return async (req, res, next) => {
-    const element = await db(array[0].table).where({id: req.params.id}).first()
     let isAllow = false
     for (const rule of array) {
       if((Object.keys(rule).length) > 1){
+        const element = await db(array[0].table).where({id: req.params.id}).first()
         isAllow = checkOwnEntity(rule, req.user[0], element)
       } else {
         isAllow = checkRole(req.user[0], rule.permission)
@@ -28,7 +28,7 @@ const authGetEntity = (array) => {
     }
 
     if(isAllow === false){
-      res.status(401)
+      res.status(403)
       return res.json({
         message: 'Not allowed'
       })
