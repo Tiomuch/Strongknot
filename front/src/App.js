@@ -5,7 +5,6 @@ import Left from './Left'
 import Article from './ForHeader/Article'
 import AddArticle from './ForHeader/AddArticle' // eslint-disable-line no-unused-vars
 import Profile from './ForHeader/Profile' // eslint-disable-line no-unused-vars
-import PropTypes from 'prop-types'
 import ErrorBoundary from './ErrorBoundary'
 
 function App () {
@@ -40,16 +39,6 @@ function App () {
     </ErrorBoundary>
     </>
   )
-}
-
-App.propTypes = {
-  optionalFunc: PropTypes.func,
-  optionalString: PropTypes.string
-}
-
-App.defaultProps = {
-  profile: 'Profile',
-  headersElement: <Article />
 }
 
 export default App
