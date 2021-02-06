@@ -2,7 +2,7 @@ import React from 'react'
 
 function Left () {
   return (
-      <div>Menu</div>
+      <div className="menu">Menu</div>
   )
 }
 

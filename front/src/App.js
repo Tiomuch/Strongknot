@@ -10,17 +10,17 @@ import ErrorBoundary from './ErrorBoundary'
 function App () {
   const [headersElement, setHeadersElement] = useState(<Article />)
   const [name, setName] = useState('none') // eslint-disable-line no-unused-vars
-  const [secondName, setSecondName] = useState('none') // eslint-disable-line no-unused-vars
+  const [lastName, setLastName] = useState('none') // eslint-disable-line no-unused-vars
   const [profile, setProfile] = useState('User')
 
   const updateData = (value) => {
     setHeadersElement(value)
   }
 
-  const updateProfile = (userName, userSecondName) => {
+  const updateProfile = (userName, userLastName) => {
     setName(userName)
-    setSecondName(userSecondName)
-    setProfile(userName + ' ' + userSecondName)
+    setLastName(userLastName)
+    setProfile(userName + ' ' + userLastName)
   }
 
   return (
@@ -28,15 +28,17 @@ function App () {
       <ErrorBoundary>
       <header><Header updateData={updateData} name={profile} updateProfile={updateProfile} /></header>
       </ErrorBoundary>
+    <div className="main-part">
     <ErrorBoundary>
-      <div className="component"><Left /></div>
+      <Left />
     </ErrorBoundary>
     <ErrorBoundary>
-      <div className="component"><Middle /></div>
+      <Middle />
     </ErrorBoundary>
     <ErrorBoundary>
-      <div className="component">{headersElement}</div>
+      {headersElement}
     </ErrorBoundary>
+    </div>
     </>
   )
 }

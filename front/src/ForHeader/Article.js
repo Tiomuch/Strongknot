@@ -2,7 +2,7 @@ import React from 'react'
 
 function article () {
   return (
-    <div>Article</div>
+    <div className="right-part">Article</div>
   )
 }
 

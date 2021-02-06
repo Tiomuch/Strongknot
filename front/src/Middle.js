@@ -2,7 +2,7 @@ import React from 'react'
 
 function Middle () {
   return (
-      <div>Content</div>
+      <div className="content">Content</div>
   )
 }
 
