@@ -11,7 +11,7 @@ function App () {
   const [headersElement, setHeadersElement] = useState(<Article />)
   const [name, setName] = useState('none') // eslint-disable-line no-unused-vars
   const [secondName, setSecondName] = useState('none') // eslint-disable-line no-unused-vars
-  const [profile, setProfile] = useState('Profile')
+  const [profile, setProfile] = useState('User')
 
   const updateData = (value) => {
     setHeadersElement(value)
@@ -20,7 +20,7 @@ function App () {
   const updateProfile = (userName, userSecondName) => {
     setName(userName)
     setSecondName(userSecondName)
-    setProfile('Profile (' + userName + ' ' + userSecondName + ')')
+    setProfile(userName + ' ' + userSecondName)
   }
 
   return (

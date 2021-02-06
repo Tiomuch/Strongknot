@@ -12,15 +12,52 @@ code {
     monospace;
 }
 
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.header {
+  width: 100%;
+  height: 100px;
+  background-color: gold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: space-around;
+}
+
+.logo {
+  display: inline-block;
+  font-size: 40px;
+  position: relative;
+}
+
+.all-header-button {
+  display: inline-block;
+  position: relative;
+}
+
+.user {
+  display: inline-block;
+  font-size: 40px;
+  position: relative;
+}
+
 .header-button {
+  height: 60px;
+  width: 120px;
   display: inline-block;
   text-align: center;
   color: black;
-  background-color: aqua;
+  background-color: yellowgreen;
+  border-radius: 20%;
+  margin-right: 20px;
+  margin-left: 20px;
 }
 
 .component {
   display: inline-block;
-  background-color: gold;
+  background-color: chartreuse;
   color: black;
 }

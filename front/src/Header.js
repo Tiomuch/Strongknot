@@ -16,13 +16,14 @@ function Header ({ updateData, name, updateProfile }) {
   }
 
   return (
-    <div>
-      <div>Strongknot</div>
-      <div>
+    <div className="header">
+      <div className="logo">Strongknot</div>
+      <div className="all-header-button">
         <button className="header-button" name="Article" onClick={showComponent}>Article</button>
         <button className="header-button" name="AddArticle" onClick={showComponent}>Add Article</button>
-        <button className="header-button" name="Profile" onClick={showComponent}>{name}</button>
+        <button className="header-button" name="Profile" onClick={showComponent}>Profile</button>
       </div>
+      <div className="user">{name}</div>
     </div>
   )
 }
