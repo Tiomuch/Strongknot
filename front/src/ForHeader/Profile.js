@@ -7,6 +7,10 @@ function profile ({ updateProfile }) {
     updateProfile(event.target.elements.name.value, event.target.elements.lastName.value)
   }
 
+  const clear = () => {
+    updateProfile('User', '')
+  }
+
   return (
     <div className="right-part">
       <form onSubmit={rename}>
@@ -16,6 +20,7 @@ function profile ({ updateProfile }) {
           <input type="text" placeholder="Enter Last Name" name="lastName" required />
         <button type="submit" className="sign">Отправить</button>
       </form>
+      <button className="exit" onClick={clear}>Выйти</button>
     </div>
   )
 }
