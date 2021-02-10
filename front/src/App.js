@@ -21,30 +21,26 @@ function App () {
   }
 
   const checkData = (match) => {
-    const alfa = match.params[2]
-    if (alfa && alfa !== 'edit' && alfa !== 'delete') {
-      const full = alfa.split('-')
-      const array = []
-      array[0] = full[2] - 0
-      array[1] = full[3] - 1
-      array[2] = ((full[4][0]) + (full[4][1])) - 0
-      const d = new Date()
-      if (d.getFullYear() > array[0]) {
-        return <h1>OK</h1>
-      } else if (d.getFullYear() === array[0]) {
-        if (d.getMonth() > array[1]) {
-          return <h1>OK</h1>
-        } else if (d.getMonth() === array[1]) {
-          if (d.getDate() >= array[2]) {
-            return <h1>OK</h1>
-          } else {
-            return <h1>Данные неверные</h1>
-          }
+    const alfa = match.params.action
+    const full = alfa.split('-')
+    const array = []
+    array[0] = full[2] - 0
+    array[1] = full[3] - 1
+    array[2] = ((full[4][0]) + (full[4][1])) - 0
+    const d = new Date()
+    if (d.getFullYear() > array[0]) {
+      return true
+    } else if (d.getFullYear() === array[0]) {
+      if (d.getMonth() > array[1]) {
+        return true
+      } else if (d.getMonth() === array[1]) {
+        if (d.getDate() >= array[2]) {
+          return true
         } else {
-          return <h1>Данные неверные</h1>
+          return false
         }
       } else {
-        return <h1>Данные неверные</h1>
+        return false
       }
     }
   }
@@ -66,7 +62,7 @@ function App () {
           <Route path="/" exact component={Article} />
           <Route path="/add-article" exact component={AddArticle} />
           <Route path="/profile" exact render={props => <Profile updateProfile={updateProfile} />} />
-          <Route path="/users/(\d{1,8})?/(file|avatar|edit)?/(edit|delete|\d{1,8}-\w{1,10}-\d{4}-\d{2}-\d{2}.docx|\d{1,8}-\w{1,10}-\d{4}-\d{2}-\d{2}.jpeg|\d{1,8}-\w{1,10}-\d{4}-\d{2}-\d{2}.pdf|\d{1,8}-\w{1,10}-\d{4}-\d{2}-\d{2}.txt)?/(v.\d{1,8}.\d{1,8}.\d{1,8})?" render={props => <ForPath checkData={checkData} {...props} />} />
+          <Route path={['/users', '/users/:id([0-9]{1,8})', '/users/:id([0-9]{1,8})/:name(avatar|edit)', '/users/:id([0-9]{1,8})/:name(avatar)/:action(edit|delete)?', '/users/:id([0-9]{1,8})/:name(file)/:action([0-9]{1,8}-[A-Za-z]{1,10}-[0-9]{4}-[0-9]{2}-[0-9]{2}.docx)/:version(v.[0-9]{1,8}.[0-9]{1,8}.[0-9]{1,8})', '/users/:id([0-9]{1,8})/:name(file)/:action([0-9]{1,8}-[A-Za-z]{1,10}-[0-9]{4}-[0-9]{2}-[0-9]{2}.pdf)/:version(v.[0-9]{1,8}.[0-9]{1,8}.[0-9]{1,8})', '/users/:id([0-9]{1,8})/:name(file)/:action([0-9]{1,8}-[A-Za-z]{1,10}-[0-9]{4}-[0-9]{2}-[0-9]{2}.jpeg)/:version(v.[0-9]{1,8}.[0-9]{1,8}.[0-9]{1,8})', '/users/:id([0-9]{1,8})/:name(file)/:action([0-9]{1,8}-[A-Za-z]{1,10}-[0-9]{4}-[0-9]{2}-[0-9]{2}.txt)/:version(v.[0-9]{1,8}.[0-9]{1,8}.[0-9]{1,8})']} exact render={props => <ForPath checkData={checkData} {...props} />} />
         </Switch>
       </ErrorBoundary>
       </div>
