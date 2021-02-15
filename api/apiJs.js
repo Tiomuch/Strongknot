@@ -6,13 +6,22 @@ const envy = require('./mainClass.js')
 const authRoutes = require('./routes/auth')
 const postRoutes = require('./routes/Routing.js')
 const other = require('./routes/otherAsks.js')
+const cookieSession = require('cookie-session')
+
+app.use(cookieSession({
+  name: 'first-session',
+  keys: ['key1', 'key2']
+}))
 
 app.use(passport.initialize())
+app.use(passport.session())
 require('./forPassport/passport')(passport)
 
 app.use(bodyParser.json())
 
 envy.get()
+
+app.get('/', (req, res) => res.send('Hello'))
 
 app.use('/api/auth', authRoutes)
 
