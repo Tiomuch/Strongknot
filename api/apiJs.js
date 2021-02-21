@@ -13,6 +13,14 @@ app.use(cookieSession({
   keys: ['key1', 'key2']
 }))
 
+app.use((req, res, next) => {
+  let origin = 'http://localhost:3001'
+  res.header('Access-Control-Allow-Origin', origin)
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  next()
+})
+
 app.use(passport.initialize())
 app.use(passport.session())
 require('./forPassport/passport')(passport)
@@ -25,7 +33,7 @@ app.get('/', (req, res) => res.send('Hello'))
 
 app.use('/api/auth', authRoutes)
 
-app.use(passport.authenticate('jwt', {session: false}))
+// app.use(passport.authenticate('jwt', {session: false}))
 
 app.use('/api/posts', postRoutes)
 
