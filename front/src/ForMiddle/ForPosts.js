@@ -39,6 +39,7 @@ function Example () {
         {data.slice(0, visible).map(post => <li key={post.id}>
           <div className="post-top">{post.title}</div>
           <div className="post-down">{post.description}</div>
+          <button>Edit Post</button>
         </li>)}
         <button className="sign" onClick={showMoreItems}>Load more</button>
       </ul>

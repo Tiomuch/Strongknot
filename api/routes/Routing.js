@@ -12,8 +12,22 @@ router.get('/all-posts', async (req, res) => {
   res.json(posts)
 })
 
-router.post('/create-post', (req, res) => {
-  //Create new post
+router.post('/create-post', async (req, res) => {
+  try {
+    const posts = await db('posts').select('*')
+    const newID = Number(posts[posts.length - 1].id) + 1
+    await db('posts').insert({
+      id: newID,
+      title: req.body.title,
+      description: req.body.description,
+      date: req.body.date,
+      userid: req.body.userid
+    })
+
+    res.status(201).json(req.body)
+  } catch (e) {
+    console.log(e)
+  }
 })
 
 router.get('/:id', (req, res) => {

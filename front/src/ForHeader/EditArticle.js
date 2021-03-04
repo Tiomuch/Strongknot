@@ -2,7 +2,7 @@ import React from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import axios from 'axios'
 
-function addArticle () {
+function editArticle () {
   return (
     <div className="right-part">
       <Formik
@@ -19,7 +19,7 @@ function addArticle () {
           values.userid = 47 // реализую позже
 
           try {
-            await axios.post('http://localhost:3000/api/posts/create-post', values).then(res => console.log(res))
+            await axios.put('http://localhost:3000/api/posts/create-post', values).then(res => console.log(res))
             alert('Post has been sent')
             // const data = await result.json() // eslint-disable-line no-unused-vars
           } catch (e) {
@@ -47,4 +47,4 @@ function addArticle () {
   )
 }
 
-export default addArticle
+export default editArticle
