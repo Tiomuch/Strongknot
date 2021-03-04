@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Header from './Header'
-import PostList from './ForMiddle/PostList'
+import ForPosts from './ForMiddle/ForPosts'
 import Left from './Left'
 import Article from './ForHeader/Article'
 import AddArticle from './ForHeader/AddArticle'
@@ -29,7 +29,7 @@ function App () {
         <Left />
       </ErrorBoundary>
       <ErrorBoundary>
-        <Route path="/" component={PostList} />
+        <Route path="/" component={ForPosts} />
       </ErrorBoundary>
       <ErrorBoundary>
         <Switch>
