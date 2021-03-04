@@ -1,12 +1,14 @@
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 const queryClient = new QueryClient()
 
-export default function App () {
+export default function ForPosts ({ updatePost }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <Example />
+      <AllPosts updatePost={updatePost} />
     </QueryClientProvider>
   )
 }
@@ -16,7 +18,7 @@ const FetchPosts = async () => {
   return res.json()
 }
 
-function Example () {
+function AllPosts ({ updatePost }) {
   const { isLoading, error, data } = useQuery('posts', FetchPosts)
   const [visible, setVisible] = useState(5)
 
@@ -25,6 +27,10 @@ function Example () {
     if (visible >= data.length) {
       alert('No more items')
     }
+  }
+
+  const infPost = (post) => {
+    updatePost(data[post.target.name - 1])
   }
 
   if (isLoading) return 'Loading...'
@@ -36,13 +42,23 @@ function Example () {
   } else {
     return (
       <ul className="content">
-        {data.slice(0, visible).map(post => <li key={post.id}>
+        {data.slice(0, visible).map(post => <li key={post.id} className="for-li">
+          <Link to="/edit-post">
+            <button className="edit" name={post.id} onClick={infPost}>Edit Post</button>
+          </Link>
           <div className="post-top">{post.title}</div>
           <div className="post-down">{post.description}</div>
-          <button>Edit Post</button>
         </li>)}
         <button className="sign" onClick={showMoreItems}>Load more</button>
       </ul>
     )
   }
+}
+
+AllPosts.propTypes = {
+  updatePost: PropTypes.func
+}
+
+ForPosts.propTypes = {
+  updatePost: PropTypes.func
 }

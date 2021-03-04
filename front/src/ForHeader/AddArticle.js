@@ -21,7 +21,6 @@ function addArticle () {
           try {
             await axios.post('http://localhost:3000/api/posts/create-post', values).then(res => console.log(res))
             alert('Post has been sent')
-            // const data = await result.json() // eslint-disable-line no-unused-vars
           } catch (e) {
             console.log(e)
           }
