@@ -6,6 +6,13 @@ const userID = 'id'
 const table = 'posts'
 const postID = 'userid'
 const db = require('../routes/forDB')
+const niv  = require('node-input-validator')
+
+niv.extend('unique', async ({ value, args }) => {
+  const exist = await db(args).where({id: value}).first()
+
+  return !exist;
+})
 
 router.get('/all-posts', async (req, res) => {
   const posts = await db('posts').select('*')
@@ -13,20 +20,38 @@ router.get('/all-posts', async (req, res) => {
 })
 
 router.post('/create-post', async (req, res) => {
-  try {
-    const posts = await db('posts').select('*')
-    const newID = Number(posts[posts.length - 1].id) + 1
-    await db('posts').insert({
-      id: newID,
-      title: req.body.title,
-      description: req.body.description,
-      date: req.body.date,
-      userid: req.body.userid
-    })
+  /* const posts = await db('posts').select('*')
+  const newID = Number(posts[posts.length - 1].id) + 1 */
 
-    res.status(201).json(req.body)
-  } catch (e) {
-    console.log(e)
+  const v = new niv.Validator(req.body, {
+    id: 'required|unique:posts',
+    title: 'required|maxLength:50|minLength:1',
+    description: 'required|minLength:1|maxLength:500',
+    date: 'required|date',
+    userid: 'required|integer'
+  })
+
+  const matched = await v.check()
+
+  if (matched) {
+    try {
+      await db('posts').insert({
+        id: req.body.id,
+        title: req.body.title,
+        description: req.body.description,
+        date: req.body.date,
+        userid: req.body.userid
+      })
+
+      res.status(201).json(req.body)
+    } catch (e) {
+      console.log(e)
+    }
+  } else {
+    req.body = v.errors
+    res.status(422).json({
+      message: 'Данные не верны'
+    })
   }
 })
 
@@ -38,7 +63,7 @@ router.put('/edit-post/:id',  [authGetEntity(userID, table, postID)], (req, res)
   res.json({
     message: 'you can edit post'
   })
-  //Edit current post
+  //В разработке
 })
 
 router.delete('/delete-post/:id',  [authGetEntity(userID, table, postID)], (req, res) => {

@@ -33,7 +33,7 @@ app.get('/', (req, res) => res.send('Hello'))
 
 app.use('/api/auth', authRoutes)
 
-// app.use(passport.authenticate('jwt', {session: false}))
+app.use(passport.authenticate('jwt', {session: false}))
 
 app.use('/api/posts', postRoutes)
 
