@@ -9,9 +9,17 @@ const db = require('../routes/forDB')
 const niv  = require('node-input-validator')
 
 niv.extend('unique', async ({ value, args }) => {
-  const exist = await db(args).where({id: value}).first()
+  let exist = false
+  if (args[2]) {
+    const first = await db(args[0]).whereNot(args[1], '=', args[2])
+    const entity = await db(args[0]).select('*')
 
-  return !exist;
+    exist = first.length !== entity.length;
+  } else {
+    exist = await db(args[0]).where(args[1], '=', value).first()
+  }
+
+  return !exist
 })
 
 router.get('/all-posts', async (req, res) => {
@@ -24,7 +32,7 @@ router.post('/create-post', async (req, res) => {
   const newID = Number(posts[posts.length - 1].id) + 1 */
 
   const v = new niv.Validator(req.body, {
-    id: 'required|unique:posts',
+    id: 'required|unique:posts, id',
     title: 'required|maxLength:50|minLength:1',
     description: 'required|minLength:1|maxLength:500',
     date: 'required|date',
