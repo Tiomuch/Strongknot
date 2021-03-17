@@ -11,10 +11,10 @@ const niv  = require('node-input-validator')
 niv.extend('unique', async ({ value, args }) => {
   let exist = false
   if (args[2]) {
-    const first = await db(args[0]).whereNot(args[1], '=', args[2])
-    const entity = await db(args[0]).select('*')
-
-    exist = first.length !== entity.length;
+    exist =  await db(args[0])
+      .whereNot(args[1], '=', args[2])
+      .where(args[1], '=', value)
+      .first()
   } else {
     exist = await db(args[0]).where(args[1], '=', value).first()
   }
