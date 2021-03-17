@@ -28,8 +28,9 @@ router.get('/all-posts', async (req, res) => {
 })
 
 router.post('/create-post', async (req, res) => {
-  /* const posts = await db('posts').select('*')
-  const newID = Number(posts[posts.length - 1].id) + 1 */
+  const posts = await db('posts').select('*')
+  const newID = Number(posts[posts.length - 1].id) + 1
+  req.body.id = newID
 
   const v = new niv.Validator(req.body, {
     id: 'required|unique:posts, id',

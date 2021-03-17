@@ -13,13 +13,13 @@ export default function ForPosts ({ updatePost }) {
   )
 }
 
-const FetchPosts = async () => {
+const fetchPosts = async () => {
   const res = await fetch('http://localhost:3000/api/posts/all-posts')
   return res.json()
 }
 
 function AllPosts ({ updatePost }) {
-  const { isLoading, error, data } = useQuery('posts', FetchPosts)
+  const { isLoading, error, data } = useQuery('posts', fetchPosts)
   const [visible, setVisible] = useState(5)
 
   const showMoreItems = () => {

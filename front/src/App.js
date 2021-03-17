@@ -3,7 +3,8 @@ import Header from './Header'
 import ForPosts from './ForMiddle/ForPosts'
 import Left from './Left'
 import Article from './ForHeader/Article'
-import AddArticle from './ForHeader/AddArticle'
+// import AddArticle from './ForHeader/AddArticle'
+import AddDialog from './ForHeader/AddDialog'
 import Profile from './ForHeader/Profile'
 import EditArticle from './ForHeader/EditArticle'
 import ErrorBoundary from './ErrorBoundary'
@@ -31,11 +32,7 @@ function App () {
   }
 
   const updatePost = (data) => {
-    postData.id = data.id
-    postData.title = data.title
-    postData.description = data.description
-    postData.userid = data.userid
-    setPost(postData)
+    setPost(data)
   }
 
   return (
@@ -53,7 +50,7 @@ function App () {
       <ErrorBoundary>
         <Switch>
           <Route path="/" exact component={Article} />
-          <Route path="/add-article" exact component={AddArticle} />
+          <Route path="/add-article" exact component={AddDialog} />
           <Route path="/profile" exact render={props => <Profile updateProfile={updateProfile} />} />
           <Route path="/edit-post" exact render={props => <EditArticle post={post} />} />
         </Switch>
