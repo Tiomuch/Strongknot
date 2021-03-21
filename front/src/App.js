@@ -3,8 +3,7 @@ import Header from './Header'
 import ForPosts from './ForMiddle/ForPosts'
 import Left from './Left'
 import Article from './ForHeader/Article'
-// import AddArticle from './ForHeader/AddArticle'
-import AddDialog from './ForHeader/AddDialog'
+import AddArticle from './ForHeader/AddArticle'
 import Profile from './ForHeader/Profile'
 import EditArticle from './ForHeader/EditArticle'
 import ErrorBoundary from './ErrorBoundary'
@@ -14,16 +13,7 @@ function App () {
   const [name, setName] = useState('none') // eslint-disable-line no-unused-vars
   const [lastName, setLastName] = useState('none') // eslint-disable-line no-unused-vars
   const [profile, setProfile] = useState('User')
-
-  const postData = {
-    id: 0,
-    title: '',
-    description: '',
-    data: '',
-    userid: 0
-  }
-
-  const [post, setPost] = useState(postData)
+  const [post, setPost] = useState()
 
   const updateProfile = (userName, userLastName) => {
     setName(userName)
@@ -50,7 +40,7 @@ function App () {
       <ErrorBoundary>
         <Switch>
           <Route path="/" exact component={Article} />
-          <Route path="/add-article" exact component={AddDialog} />
+          <Route path="/add-article" exact component={AddArticle} />
           <Route path="/profile" exact render={props => <Profile updateProfile={updateProfile} />} />
           <Route path="/edit-post" exact render={props => <EditArticle post={post} />} />
         </Switch>
