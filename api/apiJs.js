@@ -13,6 +13,8 @@ app.use(cookieSession({
   keys: ['key1', 'key2']
 }))
 
+app.use('/uploads', express.static('uploads'))
+
 app.use((req, res, next) => {
   let origin = 'http://localhost:3001'
   res.header('Access-Control-Allow-Origin', origin)
@@ -33,7 +35,7 @@ app.get('/', (req, res) => res.send('Hello'))
 
 app.use('/api/auth', authRoutes)
 
-//app.use(passport.authenticate('jwt', {session: false}))
+app.use(passport.authenticate('jwt', {session: false}))
 
 app.use('/api/posts', postRoutes)
 

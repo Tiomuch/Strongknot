@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 require('dotenv').config()
 const authGetEntity = require('../middleware/userOwnEntity')
+const upload = require('../middleware/upload')
 const userID = 'id'
 const table = 'posts'
 const postID = 'userid'
@@ -27,17 +28,16 @@ router.get('/all-posts', async (req, res) => {
   res.json(posts)
 })
 
-router.post('/create-post', async (req, res) => {
+router.post('/create-post', upload.single('image'), async (req, res) => {
   const posts = await db('posts').select('*')
   const newID = Number(posts[posts.length - 1].id) + 1
   req.body.id = newID
 
   const v = new niv.Validator(req.body, {
-    id: 'required|unique:posts, id',
     title: 'required|maxLength:50|minLength:1',
     description: 'required|minLength:1|maxLength:500',
     date: 'required|date',
-    userid: 'required|integer'
+    userid: 'integer'
   })
 
   const matched = await v.check()
@@ -49,7 +49,8 @@ router.post('/create-post', async (req, res) => {
         title: req.body.title,
         description: req.body.description,
         date: req.body.date,
-        userid: req.body.userid
+        userid: req.user[0].id,
+        image: req.file ? req.file.path : ''
       })
 
       res.status(201).json(req.body)
@@ -68,7 +69,7 @@ router.get('/:id', (req, res) => {
   //View one current post
 })
 
-router.put('/edit-post/:id',  [authGetEntity(userID, table, postID)], (req, res) => {
+router.put('/edit-post/:id',  upload.single('image'),[authGetEntity(userID, table, postID)], (req, res) => {
   res.json({
     message: 'you can edit post'
   })
