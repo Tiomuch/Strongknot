@@ -1,8 +1,13 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 function Left () {
   return (
-      <div className="menu">Menu</div>
+      <div className="left-part">
+        <Link to="/edit-profile">
+          <button className='sign'>Edit profile</button>
+        </Link>
+      </div>
   )
 }
 

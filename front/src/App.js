@@ -7,7 +7,8 @@ import AddArticle from './ForHeader/AddArticle'
 import Profile from './ForHeader/Profile'
 import EditArticle from './ForHeader/EditArticle'
 import ErrorBoundary from './ErrorBoundary'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom' // eslint-disable-line no-unused-vars
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import EditProfile from './ForLeft/EditProfile'
 
 function App () {
   const [name, setName] = useState('none') // eslint-disable-line no-unused-vars
@@ -43,6 +44,7 @@ function App () {
           <Route path="/add-article" exact component={AddArticle} />
           <Route path="/profile" exact render={props => <Profile updateProfile={updateProfile} />} />
           <Route path="/edit-post" exact render={props => <EditArticle post={post} />} />
+          <Route path="/edit-profile" exact render={props => <EditProfile name={name} secondName={lastName} updatePost={updatePost} />} />
         </Switch>
       </ErrorBoundary>
       </div>

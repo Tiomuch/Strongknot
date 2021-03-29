@@ -49,7 +49,7 @@ router.post('/create-post', upload.single('image'), async (req, res) => {
         title: req.body.title,
         description: req.body.description,
         date: req.body.date,
-        userid: req.user[0].id,
+        userid: 47, // req.user[0].id,
         image: req.file ? req.file.path : ''
       })
 

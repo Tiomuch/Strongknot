@@ -114,7 +114,7 @@ li {
   /*flex: 1;*/
 }
 
-.menu {
+.left-part {
   display: flex;
   justify-content: space-around;
   align-items: center;

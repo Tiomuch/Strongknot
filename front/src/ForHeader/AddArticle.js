@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import axios from 'axios'
+import ImageCrop from './ImageCrop'
+import FormData from 'form-data'
 
 function addArticle () {
+  const [image, setImage] = useState(null) // eslint-disable-line no-unused-vars
+
+  const getImage = (src) => {
+    setImage(src)
+  }
+
   const submit = async (values, { setSubmitting }) => {
     const Dat = new Date()
     let mon
@@ -14,11 +22,33 @@ function addArticle () {
     values.date = Dat.getFullYear() + '-' + mon + '-' + Dat.getDate()
     values.userid = 47 // реализую позже
 
-    try {
-      await axios.post('http://localhost:3000/api/posts/create-post', values).then(res => console.log(res))
-      alert('Post has been sent')
-    } catch (e) {
-      console.log(e)
+    if (image !== null) {
+      const formData = new FormData()
+      const config = {
+        header: { 'content-type': 'multypart/form-data' }
+      }
+
+      formData.append('image', image)
+
+      for (const key in values) {
+        formData.append(key, values[key])
+      }
+
+      console.log(formData)
+
+      try {
+        await axios.post('http://localhost:3000/api/posts/create-post', formData, config).then(res => console.log(res))
+        alert('Post has been sent')
+      } catch (e) {
+        console.log(e)
+      }
+    } else {
+      try {
+        await axios.post('http://localhost:3000/api/posts/create-post', values).then(res => console.log(res))
+        alert('Post has been sent')
+      } catch (e) {
+        console.log(e)
+      }
     }
 
     setSubmitting(false)
@@ -45,6 +75,8 @@ function addArticle () {
             <label><b>Description</b></label>
             <Field type="description" name="description" placeholder="Enter Description" className="Field" />
             <ErrorMessage name="description" component="div" />
+            <label><b>Image</b></label>
+            <ImageCrop getImage={getImage} />
             <button type="submit" disabled={isSubmitting} className="sign">
               Отправить
             </button>
