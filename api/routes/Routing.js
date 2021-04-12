@@ -35,15 +35,18 @@ router.get('/all-posts', async (req, res) => {
 })
 
 router.post('/create-post', upload.single('image'), async (req, res) => {
-  const posts = await db('posts').select('*')
-  const newID = Number(posts[posts.length - 1].id) + 1
-  req.body.id = newID
+  const posts = await db('posts').select('*').groupBy("id")
+  if (posts.length === 0) {
+    req.body.id = 1
+  } else {
+    const newID = Number(posts[posts.length - 1].id) + 1
+    req.body.id = newID
+  }
 
   const v = new niv.Validator(req.body, {
     title: 'required|maxLength:50|minLength:1',
     description: 'required|minLength:1|maxLength:500',
-    date: 'required|date',
-    userid: 'integer'
+    date: 'required|date'
   })
 
   const matched = await v.check()
@@ -83,18 +86,125 @@ router.get('/own', async (req, res) => {// посты конкретного ю�
   }
 })
 
-router.put('/edit-post/:id',  upload.single('image'),[authGetEntity(userID, table, postID)], (req, res) => {
-  res.json({
-    message: 'you can edit post'
+router.post('/edit-post/:id',  upload.single('image'),[authGetEntity(userID, table, postID, userID)], async (req, res) => {
+  const v = new niv.Validator(req.body, {
+    title: 'required|maxLength:50|minLength:1',
+    description: 'required|minLength:1|maxLength:500',
+    date: 'required|date'
   })
-  //В разработке
+
+  const matched = await v.check()
+
+  if (matched) {
+    try {
+      await db('posts').where({id: req.params.id}).update({
+        title: req.body.title,
+        description: req.body.description,
+        date: req.body.date,
+        image: req.file ? req.file.path : ''
+      })
+
+      res.status(201).json(req.body)
+    } catch (e) {
+      console.log(e)
+    }
+  } else {
+    req.body = v.errors
+    res.status(422).json({
+      message: 'Данные не верны'
+    })
+  }
 })
 
-router.delete('/delete-post/:id',  [authGetEntity(userID, table, postID)], (req, res) => {
-  res.json({
-    message: 'you can delete post'
-  })
-  //Delete current post
+router.delete('/delete-post/:id',  [authGetEntity(userID, table, postID, userID)], async (req, res) => {
+  try {
+    const post = await db('posts').select('*').where({id: req.params.id})
+
+    if (post) {
+      await db('posts').where({id: req.params.id}).del()
+
+      res.status(201).json({
+        message: 'Пост удален'
+      })
+    } else {
+      res.status(422).json({
+        message: 'Такого поста нет'
+      })
+    }
+
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+router.get('/likes/:id', async (req, res) => {
+  const post = await db('posts').select('*').where({id: req.params.id}).first()
+
+  if (post) {
+    const likes = await db('likes').select('*').where({posts_id: req.params.id})
+
+    if (likes.length !== 0) {
+      res.json(likes)
+    } else {
+      res.status(422).json({
+        message: 'Нету лайков'
+      })
+    }
+  } else {
+    res.status(422).json({
+      message: 'Нету поста'
+    })
+  }
+})
+
+router.post('/add-like', async (req, res) => {
+  const post = await db('posts').select('*').where({id: req.body.id}).first()
+  if (!post) {
+    res.status(422).json({
+      message: 'Нету поста'
+    })
+  } else {
+    const likes = await db('likes').select('*').groupBy("likes_id")
+    if (likes.length === 0) {
+      req.body.like_id = 1
+    } else {
+      const newID = Number(likes[likes.length - 1].likes_id) + 1
+      req.body.like_id = newID
+    }
+
+    try {
+      await db('likes').insert({
+        likes_id: req.body.like_id,
+        posts_id: req.body.id,
+        users_id: req.user[0].id
+      })
+
+      res.status(201).json(req.body)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+})
+
+router.delete('/del-like/:id', async (req, res) => {
+  try {
+    const like = await db('likes').select('*').where({likes_id: req.params.id})
+
+    if (like) {
+      await db('likes').where({likes_id: req.params.id}).del()
+
+      res.status(201).json({
+        message: 'Лайк удален'
+      })
+    } else {
+      res.status(422).json({
+        message: 'Такого лайка нет'
+      })
+    }
+
+  } catch (e) {
+    console.log(e)
+  }
 })
 
 module.exports = router

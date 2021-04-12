@@ -2,10 +2,11 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const passport = require('passport')
-const envy = require('./mainClass.js')
+const envy = require('./mainClass')
 const authRoutes = require('./routes/auth')
-const postRoutes = require('./routes/Routing.js')
-const other = require('./routes/otherAsks.js')
+const postRoutes = require('./routes/Routing')
+const commentRoutes = require('./routes/comment')
+const other = require('./routes/otherAsks')
 const cookieSession = require('cookie-session')
 
 app.use(cookieSession({
@@ -38,6 +39,8 @@ app.use('/api/auth', authRoutes)
 app.use(passport.authenticate('jwt', {session: false}))
 
 app.use('/api/posts', postRoutes)
+
+app.use('/api/comments', commentRoutes)
 
 app.use('/api/other', other)
 

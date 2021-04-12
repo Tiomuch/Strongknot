@@ -40,4 +40,47 @@ router.get('/get-avatar', async (req, res) => {
   }
 })
 
+router.post('/add-friend', async (req, res) => {
+  const friends = await db('friend').select('*').groupBy("friend_id")
+  if (friends.length === 0) {
+    req.body.friend_id = 1
+  } else {
+    const newID = Number(friends[friends.length - 1].friend_id) + 1
+    req.body.friend_id = newID
+  }
+
+  try {
+    await db('friend').insert({
+      friend_id: req.body.friend_id,
+      user_id: req.user[0].id,
+      with_user_id: req.body.id
+    })
+
+    res.status(201).json(req.body)
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+router.delete('/delete-friend/:id', async (req, res) => {
+  try {
+    const friend = await db('friend').select('*').where({friend_id: req.params.id})
+
+    if (friend) {
+      await db('friend').where({friend_id: req.params.id}).del()
+
+      res.status(201).json({
+        message: 'Друг удалён'
+      })
+    } else {
+      res.status(422).json({
+        message: 'Такого друга нет'
+      })
+    }
+
+  } catch (e) {
+    console.log(e)
+  }
+})
+
 module.exports = router
