@@ -25,7 +25,13 @@ niv.extend('unique', async ({ value, args }) => {
 
 router.get('/all-posts', async (req, res) => {
   const posts = await db('posts').select('*')
-  res.json(posts)
+  if (posts.length !== 0) {
+    res.json(posts)
+  } else {
+    res.status(422).json({
+      message: 'Нету постов'
+    })
+  }
 })
 
 router.post('/create-post', upload.single('image'), async (req, res) => {
@@ -49,7 +55,7 @@ router.post('/create-post', upload.single('image'), async (req, res) => {
         title: req.body.title,
         description: req.body.description,
         date: req.body.date,
-        userid: 47, // req.user[0].id,
+        userid: req.user[0].id,
         image: req.file ? req.file.path : ''
       })
 
@@ -65,8 +71,16 @@ router.post('/create-post', upload.single('image'), async (req, res) => {
   }
 })
 
-router.get('/:id', (req, res) => {
-  //View one current post
+router.get('/own', async (req, res) => {// посты конкретного юзера
+  const posts = await db('posts').select('*').where({userid: req.user[0].id})
+
+  if (posts.length !== 0) {
+    res.json(posts)
+  } else {
+    res.status(422).json({
+      message: 'Нету постов'
+    })
+  }
 })
 
 router.put('/edit-post/:id',  upload.single('image'),[authGetEntity(userID, table, postID)], (req, res) => {
