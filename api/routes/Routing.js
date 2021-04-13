@@ -118,7 +118,7 @@ router.post('/edit-post/:id',  upload.single('image'),[authGetEntity(userID, tab
 
 router.delete('/delete-post/:id',  [authGetEntity(userID, table, postID, userID)], async (req, res) => {
   try {
-    const post = await db('posts').select('*').where({id: req.params.id})
+    const post = await db('posts').select('*').where({id: req.params.id}).first()
 
     if (post) {
       await db('posts').where({id: req.params.id}).del()
@@ -188,7 +188,7 @@ router.post('/add-like', async (req, res) => {
 
 router.delete('/del-like/:id', async (req, res) => {
   try {
-    const like = await db('likes').select('*').where({likes_id: req.params.id})
+    const like = await db('likes').select('*').where({likes_id: req.params.id}).first()
 
     if (like) {
       await db('likes').where({likes_id: req.params.id}).del()

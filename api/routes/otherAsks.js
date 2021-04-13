@@ -64,7 +64,7 @@ router.post('/add-friend', async (req, res) => {
 
 router.delete('/delete-friend/:id', async (req, res) => {
   try {
-    const friend = await db('friend').select('*').where({friend_id: req.params.id})
+    const friend = await db('friend').select('*').where({friend_id: req.params.id}).first()
 
     if (friend) {
       await db('friend').where({friend_id: req.params.id}).del()

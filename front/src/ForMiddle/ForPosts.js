@@ -33,9 +33,9 @@ function AllPosts ({ updatePost }) {
     updatePost(data[post.target.name - 1])
   }
 
-  if (isLoading) return 'Loading...'
+  if (isLoading) return <h1 className="content">Loading...</h1>
 
-  if (error) return 'An error has occurred: ' + error.message
+  if (error) return <h1 className="content">Log In please</h1>
 
   if (!data.length || data.length === 0) {
     return <h1>No posts</h1>

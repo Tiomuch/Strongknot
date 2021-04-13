@@ -9,18 +9,21 @@ import EditArticle from './ForHeader/EditArticle'
 import ErrorBoundary from './ErrorBoundary'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import EditProfile from './ForLeft/EditProfile'
+import Register from './Auth/Registration'
+import EmailCheck from './Auth/EmailCheck'
+import Login from './Auth/Login'
 
 function App () {
   const [name, setName] = useState('none') // eslint-disable-line no-unused-vars
   const [lastName, setLastName] = useState('none') // eslint-disable-line no-unused-vars
-  const [profile, setProfile] = useState('User')
+  const [profile, setProfile] = useState('User') // eslint-disable-line no-unused-vars
   const [post, setPost] = useState()
 
-  const updateProfile = (userName, userLastName) => {
+  /* const updateProfile = (userName, userLastName) => {
     setName(userName)
     setLastName(userLastName)
     setProfile(userName + ' ' + userLastName)
-  }
+  } */
 
   const updatePost = (data) => {
     setPost(data)
@@ -42,7 +45,10 @@ function App () {
         <Switch>
           <Route path="/" exact component={Article} />
           <Route path="/add-article" exact component={AddArticle} />
-          <Route path="/profile" exact render={props => <Profile updateProfile={updateProfile} />} />
+          <Route path="/register" exact component={Register} />
+          <Route path="/check" exact component={EmailCheck} />
+          <Route path="/login" exact component={Login} />
+          <Route path="/profile" exact render={props => <Profile />} />
           <Route path="/edit-post" exact render={props => <EditArticle post={post} />} />
           <Route path="/edit-profile" exact render={props => <EditProfile name={name} secondName={lastName} updatePost={updatePost} />} />
         </Switch>

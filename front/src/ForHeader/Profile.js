@@ -1,32 +1,22 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
-function profile ({ updateProfile }) {
-  const rename = (event) => {
-    event.preventDefault()
-    updateProfile(event.target.elements.name.value, event.target.elements.lastName.value)
+function profile () {
+  const LogOut = () => {
+    console.log(localStorage.getItem('token'))
+    localStorage.setItem('token', '')
   }
-
-  const clear = () => {
-    updateProfile('User', '')
-  }
-
   return (
     <div className="right-part">
-      <form onSubmit={rename}>
-        <label><b>Имя</b></label>
-        <input type="text" placeholder="Enter Name" name="name" required />
-          <label><b>Фамилия</b></label>
-          <input type="text" placeholder="Enter Last Name" name="lastName" required />
-        <button type="submit" className="sign">Отправить</button>
-      </form>
-      <button className="exit" onClick={clear}>Выйти</button>
+      <Link to="/register">
+        <button className="header-button">Registration</button>
+      </Link>
+      <Link to="/login">
+        <button className="header-button">LogIn</button>
+      </Link>
+      { localStorage.getItem('token') !== '' ? <button className="header-button" onClick={LogOut}>LogOut</button> : <></> }
     </div>
   )
-}
-
-profile.propTypes = {
-  updateProfile: PropTypes.func
 }
 
 export default profile
