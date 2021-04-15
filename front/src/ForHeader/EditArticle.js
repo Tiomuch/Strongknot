@@ -12,11 +12,9 @@ function editArticle ({ post }) {
       mon = (Dat.getMonth() + 1)
     }
     values.date = Dat.getFullYear() + '-' + mon + '-' + Dat.getDate()
-    values.userid = post.userid
-    values.id = post.id
 
     try {
-      await axios.put(`http://localhost:3000/api/posts/edit-post/${post.id}`, values).then(res => console.log(res))
+      await axios.post(`http://localhost:3000/api/posts/edit-post/${post.id}`, values, { headers: { Authorization: localStorage.getItem('token') } }).then(res => console.log(res)) // eslint-disable-line object-curly-newline
       alert('Post has been edited')
     } catch (e) {
       console.log(e)
@@ -26,7 +24,7 @@ function editArticle ({ post }) {
   }
 
   return (
-    <div className="right-part">
+    <div className="left-part">
       <Formik
         initialValues={{ title: `${post.title}`, description: `${post.description}` }}
         validate={values => {

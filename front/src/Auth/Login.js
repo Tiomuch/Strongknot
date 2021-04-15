@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import LoginFetch from './LoginFetch'
+import PropTypes from 'prop-types'
 
-const Login = () => {
+const Login = ({ updateProfile }) => {
   const [user, setUser] = useState({
     email: '',
     password: ''
@@ -17,7 +18,7 @@ const Login = () => {
 
   const handleSubmitClick = (e) => {
     e.preventDefault()
-    LoginFetch(user)
+    LoginFetch(user, updateProfile)
   }
 
   return (
@@ -42,11 +43,15 @@ const Login = () => {
           className="sign"
           onClick={handleSubmitClick}
         >
-          Register
+          Login
         </button>
       </form>
     </div>
   )
+}
+
+Login.propTypes = {
+  updateProfile: PropTypes.func
 }
 
 export default Login

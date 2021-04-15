@@ -8,6 +8,14 @@ const postRoutes = require('./routes/Routing')
 const commentRoutes = require('./routes/comment')
 const other = require('./routes/otherAsks')
 const cookieSession = require('cookie-session')
+const cors = require('cors')
+
+const corsOptions = {
+  origin: 'http://localhost:3001',
+  optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions))
 
 app.use(cookieSession({
   name: 'first-session',
@@ -19,8 +27,8 @@ app.use('/uploads', express.static('uploads'))
 app.use((req, res, next) => {
   let origin = 'http://localhost:3001'
   res.header('Access-Control-Allow-Origin', origin)
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
   next()
 })
 

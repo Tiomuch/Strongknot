@@ -20,12 +20,14 @@ function addArticle () {
       mon = (Dat.getMonth() + 1)
     }
     values.date = Dat.getFullYear() + '-' + mon + '-' + Dat.getDate()
-    values.userid = 47 // реализую позже
 
     if (image !== null) {
       const formData = new FormData()
       const config = {
-        header: { 'content-type': 'multypart/form-data' }
+        method: 'POST',
+        headers: { 'content-type': 'multypart/form-data', // eslint-disable-line object-curly-newline
+          Authorization: localStorage.getItem('token')
+        }
       }
 
       formData.append('image', image)
@@ -33,8 +35,6 @@ function addArticle () {
       for (const key in values) {
         formData.append(key, values[key])
       }
-
-      console.log(formData)
 
       try {
         await axios.post('http://localhost:3000/api/posts/create-post', formData, config).then(res => console.log(res))
@@ -44,7 +44,12 @@ function addArticle () {
       }
     } else {
       try {
-        await axios.post('http://localhost:3000/api/posts/create-post', values).then(res => console.log(res))
+        const config = {
+          method: 'POST',
+          headers: { Authorization: localStorage.getItem('token') }
+        }
+
+        await axios.post('http://localhost:3000/api/posts/create-post', values, config).then(res => console.log(res))
         alert('Post has been sent')
       } catch (e) {
         console.log(e)

@@ -12,18 +12,23 @@ import EditProfile from './ForLeft/EditProfile'
 import Register from './Auth/Registration'
 import EmailCheck from './Auth/EmailCheck'
 import Login from './Auth/Login'
+import AddAvatar from './ForLeft/AddAvatar'
 
 function App () {
-  const [name, setName] = useState('none') // eslint-disable-line no-unused-vars
-  const [lastName, setLastName] = useState('none') // eslint-disable-line no-unused-vars
   const [profile, setProfile] = useState('User') // eslint-disable-line no-unused-vars
   const [post, setPost] = useState()
 
-  /* const updateProfile = (userName, userLastName) => {
-    setName(userName)
-    setLastName(userLastName)
+  const checkProfile = (name, lastName) => {
+    if (name && lastName && name !== '' && lastName !== '') {
+      setProfile(name + ' ' + lastName)
+    } else {
+      setProfile('User')
+    }
+  }
+
+  const updateProfile = (userName, userLastName) => {
     setProfile(userName + ' ' + userLastName)
-  } */
+  }
 
   const updatePost = (data) => {
     setPost(data)
@@ -36,21 +41,24 @@ function App () {
         </ErrorBoundary>
       <div className="main-part">
       <ErrorBoundary>
-        <Left />
+        <Switch>
+          <Route path={['/', '/add-article', '/profile', '/login']} exact component={Left}/>
+          <Route exact path="/edit-post" render={props => <EditArticle post={post} />} />
+          <Route path="/add-avatar" exact render={props => <AddAvatar />} />
+          <Route path="/edit-profile" exact render={props => <EditProfile />} />
+        </Switch>
       </ErrorBoundary>
       <ErrorBoundary>
-        <Route path="/" render={props => <ForPosts updatePost={updatePost} />} />
+        <Route path="/" render={props => <ForPosts updatePost={updatePost} checkProfile={checkProfile} />} />
       </ErrorBoundary>
       <ErrorBoundary>
         <Switch>
-          <Route path="/" exact component={Article} />
+          <Route path={['/', '/edit-post', '/edit-profile', '/add-avatar']} exact render={props => <Article updatePost={updatePost} />} />
           <Route path="/add-article" exact component={AddArticle} />
           <Route path="/register" exact component={Register} />
           <Route path="/check" exact component={EmailCheck} />
-          <Route path="/login" exact component={Login} />
-          <Route path="/profile" exact render={props => <Profile />} />
-          <Route path="/edit-post" exact render={props => <EditArticle post={post} />} />
-          <Route path="/edit-profile" exact render={props => <EditProfile name={name} secondName={lastName} updatePost={updatePost} />} />
+          <Route path="/login" exact render={props => <Login updateProfile={updateProfile} />} />
+          <Route path="/profile" exact render={props => <Profile updateProfile={updateProfile} />} />
         </Switch>
       </ErrorBoundary>
       </div>

@@ -17,6 +17,16 @@ code {
   margin: 0;
 }
 
+.image {
+  width: 500px;
+  height: 500px;
+}
+
+.header-img {
+  width: 90px;
+  height: 90px;
+}
+
 .header {
   width: 100%;
   height: 10vh;
@@ -211,6 +221,23 @@ input[type=text]:focus {
 }
 
 .edit:hover {
+  opacity: 1;
+}
+
+.delete {
+  display: inline-block;
+  background-color: orange;
+  color: white;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  height: 40px;
+  opacity: 0.9;
+  font-size: 30px;
+  outline: none;
+}
+
+.delete:hover {
   opacity: 1;
 }
 

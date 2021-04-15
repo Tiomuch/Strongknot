@@ -1,10 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
-function profile () {
+function profile ({ updateProfile }) {
   const LogOut = () => {
     console.log(localStorage.getItem('token'))
     localStorage.setItem('token', '')
+    localStorage.setItem('first_name', '')
+    localStorage.setItem('last_name', '')
+    updateProfile('User', '')
   }
   return (
     <div className="right-part">
@@ -17,6 +21,10 @@ function profile () {
       { localStorage.getItem('token') !== '' ? <button className="header-button" onClick={LogOut}>LogOut</button> : <></> }
     </div>
   )
+}
+
+profile.propTypes = {
+  updateProfile: PropTypes.func
 }
 
 export default profile

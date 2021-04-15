@@ -21,7 +21,11 @@ module.exports.login  = async (req, res) => {
         }, process.env.JWT_KEY, {expiresIn: 43200})
 
         res.status(200).json({
-          token: `Bearer ${token}`
+          token: `Bearer ${token}`,
+          user: {
+            first_name: person.first_name,
+            last_name: person.last_name
+          }
         })
       } else {
         res.status(401).json({

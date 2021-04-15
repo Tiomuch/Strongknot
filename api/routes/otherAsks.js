@@ -4,6 +4,7 @@ const upload = require('../middleware/upload')
 require('dotenv').config()
 const db = require('./forDB.js')
 const passport = require('passport')
+const niv  = require('node-input-validator')
 
 router.get('/', async (rec, res)=> {
   const users = await db('users').select('*')
@@ -80,6 +81,33 @@ router.delete('/delete-friend/:id', async (req, res) => {
 
   } catch (e) {
     console.log(e)
+  }
+})
+
+router.post('/edit-profile', async (req, res) => {
+  const v = new niv.Validator(req.body, {
+    first_name: 'required|maxLength:50|minLength:1',
+    last_name: 'required|minLength:1|maxLength:50'
+  })
+
+  const matched = await v.check()
+
+  if (matched) {
+    try {
+      await db('users').where({id: req.user[0].id}).update({
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+      })
+
+      res.status(201).json(req.body)
+    } catch (e) {
+      console.log(e)
+    }
+  } else {
+    req.body = v.errors
+    res.status(422).json({
+      message: 'Данные не верны'
+    })
   }
 })
 

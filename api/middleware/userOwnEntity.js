@@ -11,7 +11,7 @@ const authGetEntity = (mainTask, table, lastTask, id) => {
       })
     }
 
-    if(Number(req.user[0][mainTask]) !== element[lastTask]){
+    if(Number(req.user[0][mainTask]) !== Number(element[lastTask])){
       res.status(403)
       return res.json({
         message: 'Not allowed'

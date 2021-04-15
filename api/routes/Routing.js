@@ -35,7 +35,7 @@ router.get('/all-posts', async (req, res) => {
 })
 
 router.post('/create-post', upload.single('image'), async (req, res) => {
-  const posts = await db('posts').select('*').groupBy("id")
+  const posts = await db('posts').select('*').orderBy("id")
   if (posts.length === 0) {
     req.body.id = 1
   } else {

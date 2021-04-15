@@ -7,6 +7,9 @@ function Left () {
         <Link to="/edit-profile">
           <button className='sign'>Edit profile</button>
         </Link>
+        <Link to="/add-avatar">
+          <button className='sign'>Add avatar</button>
+        </Link>
       </div>
   )
 }

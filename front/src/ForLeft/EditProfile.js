@@ -1,63 +1,37 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import axios from 'axios'
-import ImageCrop from '../ForHeader/ImageCrop'
-import FormData from 'form-data'
 import PropTypes from 'prop-types'
 
-function EditProfile ({ name, secondName }) {
-  const [id, setId] = useState(48) // eslint-disable-line no-unused-vars
-  const [image, setImage] = useState(null) // eslint-disable-line no-unused-vars
-
-  const getImage = (src) => {
-    setImage(src)
-  }
-
+function EditProfile () {
   const submit = async (values, { setSubmitting }) => {
-    values.userid = id
-
-    if (image !== null) {
-      const formData = new FormData()
-      const config = {
-        header: { 'content-type': 'multypart/form-data' }
+    const conf = {
+      method: 'POST',
+      headers: {
+        Authorization: localStorage.getItem('token')
       }
+    }
 
-      formData.append('avatar', image)
-
-      for (const key in values) {
-        formData.append(key, values[key])
-      }
-
-      console.log(formData)
-
-      try {
-        await axios.post(`http://localhost:3000/api/user/edit-user/${id}`, formData, config).then(res => console.log(res))
-        alert('User has been updated')
-      } catch (e) {
-        console.log(e)
-      }
-    } else {
-      try {
-        await axios.post(`http://localhost:3000/api/user/edit-user/${id}`, values).then(res => console.log(res))
-        alert('User has been updated')
-      } catch (e) {
-        console.log(e)
-      }
+    try {
+      await axios.post('http://localhost:3000/api/other/edit-profile', values, conf).then(res => console.log(res))
+      alert('User has been updated')
+    } catch (e) {
+      console.log(e)
     }
 
     setSubmitting(false)
   }
 
   return (
-       <div className='right-part'>
+       <div className='left-part'>
          <Formik
-           initialValues={{ name: `${name}`, secondName: `${secondName}` }}
+           initialValues={{ first_name: `${localStorage.getItem('first_name')}`, last_name: `${localStorage.getItem('last_name')}` }}
            validate={values => {
              const errors = {}
-             if (!values.name) {
-               errors.title = 'Required'
-             } else if (!values.secondName) {
-               errors.secondName = 'Required'
+             if (!values.first_name) {
+               errors.first_name = 'Required'
+             } else if (!values.last_name) {
+               errors.last_name = 'Required'
              }
              return errors
            }}
@@ -66,13 +40,11 @@ function EditProfile ({ name, secondName }) {
            {({ isSubmitting }) => (
              <Form>
                <label><b>Name</b></label>
-               <Field type="name" name="name" placeholder="Enter name" className="Field" />
-               <ErrorMessage name="name" component="div" />
-               <label><b>Second Name</b></label>
-               <Field type="secondName" name="secondName" placeholder="Enter second name" className="Field" />
-               <ErrorMessage name="secondName" component="div" />
-               <label><b>Avatar</b></label>
-               <ImageCrop getImage={getImage} />
+               <Field type="first_name" name="first_name" placeholder="Enter name" className="Field" />
+               <ErrorMessage name="first_name" component="div" />
+               <label><b>Last Name</b></label>
+               <Field type="last_name" name="last_name" placeholder="Enter last name" className="Field" />
+               <ErrorMessage name="last_name" component="div" />
                <button type="submit" disabled={isSubmitting} className="sign">
                  Отправить
                </button>
