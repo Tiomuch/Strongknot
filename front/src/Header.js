@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Article from './ForHeader/Article' // eslint-disable-line no-unused-vars
 import AddArticle from './ForHeader/AddArticle' // eslint-disable-line no-unused-vars
 import Profile from './ForHeader/Profile' // eslint-disable-line no-unused-vars
@@ -7,12 +7,21 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 function Header ({ name }) {
+  const [img, setImg] = useState()
+
   useEffect(async () => {
-    await axios.get('http://localhost:3000/api/other/get-avatar', { method: 'GET', // eslint-disable-line object-curly-newline
-      headers: { Authorization: localStorage.getItem('token') }
-    }).then(res => {
-      localStorage.setItem('avatar', res.data.avatar)
-    })
+    try {
+      await axios.get('http://localhost:3000/api/other/get-avatar', { method: 'GET', // eslint-disable-line object-curly-newline
+        headers: { Authorization: localStorage.getItem('token') }
+      }).then(res => {
+        setImg(res.data.avatar)
+        localStorage.setItem('avatar', res.data.avatar)
+      })
+    } catch (e) {
+      console.log(e)
+      setImg('')
+      localStorage.setItem('avatar', '')
+    }
   })
 
   return (
@@ -29,7 +38,7 @@ function Header ({ name }) {
          <button className="header-button">Profile</button>
         </Link>
       </div>
-      <div className="user">{localStorage.getItem('avatar') ? <img className='header-img' src={'http://localhost:3000/' + localStorage.getItem('avatar')} alt="avatar"/> : <></>}
+      <div className="user">{img && img !== '' ? <img className='header-img' src={'http://localhost:3000/' + localStorage.getItem('avatar')} alt="avatar"/> : <></>}
         {name}</div>
     </div>
   )
