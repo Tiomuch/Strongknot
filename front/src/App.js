@@ -1,55 +1,55 @@
 import React, { useState } from 'react'
 import Header from './Header'
-import Middle from './Middle'
+import ForPosts from './ForMiddle/ForPosts'
 import Left from './Left'
 import Article from './ForHeader/Article'
-import AddArticle from './ForHeader/AddArticle' // eslint-disable-line no-unused-vars
-import Profile from './ForHeader/Profile' // eslint-disable-line no-unused-vars
-import PropTypes from 'prop-types'
+import AddArticle from './ForHeader/AddArticle'
+import Profile from './ForHeader/Profile'
+import EditArticle from './ForHeader/EditArticle'
 import ErrorBoundary from './ErrorBoundary'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import EditProfile from './ForLeft/EditProfile'
 
 function App () {
-  const [headersElement, setHeadersElement] = useState(<Article />)
   const [name, setName] = useState('none') // eslint-disable-line no-unused-vars
-  const [secondName, setSecondName] = useState('none') // eslint-disable-line no-unused-vars
-  const [profile, setProfile] = useState('Profile')
+  const [lastName, setLastName] = useState('none') // eslint-disable-line no-unused-vars
+  const [profile, setProfile] = useState('User')
+  const [post, setPost] = useState()
 
-  const updateData = (value) => {
-    setHeadersElement(value)
+  const updateProfile = (userName, userLastName) => {
+    setName(userName)
+    setLastName(userLastName)
+    setProfile(userName + ' ' + userLastName)
   }
 
-  const updateProfile = (userName, userSecondName) => {
-    setName(userName)
-    setSecondName(userSecondName)
-    setProfile('Profile (' + userName + ' ' + userSecondName + ')')
+  const updatePost = (data) => {
+    setPost(data)
   }
 
   return (
-    <>
+    <Router>
       <ErrorBoundary>
-      <header><Header updateData={updateData} name={profile} updateProfile={updateProfile} /></header>
+        <header><Header name={profile} /></header>
+        </ErrorBoundary>
+      <div className="main-part">
+      <ErrorBoundary>
+        <Left />
       </ErrorBoundary>
-    <ErrorBoundary>
-      <div className="component"><Left /></div>
-    </ErrorBoundary>
-    <ErrorBoundary>
-      <div className="component"><Middle /></div>
-    </ErrorBoundary>
-    <ErrorBoundary>
-      <div className="component">{headersElement}</div>
-    </ErrorBoundary>
-    </>
+      <ErrorBoundary>
+        <Route path="/" render={props => <ForPosts updatePost={updatePost} />} />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <Switch>
+          <Route path="/" exact component={Article} />
+          <Route path="/add-article" exact component={AddArticle} />
+          <Route path="/profile" exact render={props => <Profile updateProfile={updateProfile} />} />
+          <Route path="/edit-post" exact render={props => <EditArticle post={post} />} />
+          <Route path="/edit-profile" exact render={props => <EditProfile name={name} secondName={lastName} updatePost={updatePost} />} />
+        </Switch>
+      </ErrorBoundary>
+      </div>
+    </Router>
   )
-}
-
-App.propTypes = {
-  optionalFunc: PropTypes.func,
-  optionalString: PropTypes.string
-}
-
-App.defaultProps = {
-  profile: 'Profile',
-  headersElement: <Article />
 }
 
 export default App

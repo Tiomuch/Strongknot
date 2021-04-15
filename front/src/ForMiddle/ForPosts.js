@@ -1,25 +1,24 @@
-import React, { useState } from 'react'
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 const queryClient = new QueryClient()
 
-export default function UserArticle ({ updatePost }) {
+export default function ForPosts ({ updatePost }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ForUser updatePost={updatePost} />
+      <AllPosts updatePost={updatePost} />
     </QueryClientProvider>
   )
 }
 
 const fetchPosts = async () => {
-  const id = 48
-  const res = await fetch(`http://localhost:3000/api/posts/user/${id}`)
+  const res = await fetch('http://localhost:3000/api/posts/all-posts')
   return res.json()
 }
 
-function ForUser ({ updatePost }) {
+function AllPosts ({ updatePost }) {
   const { isLoading, error, data } = useQuery('posts', fetchPosts)
   const [visible, setVisible] = useState(5)
 
@@ -39,7 +38,7 @@ function ForUser ({ updatePost }) {
   if (error) return 'An error has occurred: ' + error.message
 
   if (!data.length || data.length === 0) {
-    return <h1>You have no posts</h1>
+    return <h1>No posts</h1>
   } else {
     return (
       <ul className="content">
@@ -56,10 +55,10 @@ function ForUser ({ updatePost }) {
   }
 }
 
-UserArticle.propTypes = {
+AllPosts.propTypes = {
   updatePost: PropTypes.func
 }
 
-ForUser.propTypes = {
+ForPosts.propTypes = {
   updatePost: PropTypes.func
 }

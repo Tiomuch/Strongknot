@@ -1,36 +1,32 @@
 import React from 'react'
-import Article from './ForHeader/Article'
-import AddArticle from './ForHeader/AddArticle'
-import Profile from './ForHeader/Profile'
+import Article from './ForHeader/Article' // eslint-disable-line no-unused-vars
+import AddArticle from './ForHeader/AddArticle' // eslint-disable-line no-unused-vars
+import Profile from './ForHeader/Profile' // eslint-disable-line no-unused-vars
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
-function Header ({ updateData, name, updateProfile }) {
-  const showComponent = (event) => {
-    if (event.target.name === 'Article') {
-      updateData(<Article />)
-    } else if (event.target.name === 'AddArticle') {
-      updateData(<AddArticle />)
-    } else if (event.target.name === 'Profile') {
-      updateData(<Profile updateProfile={updateProfile} />)
-    }
-  }
-
+function Header ({ name }) {
   return (
-    <div>
-      <div>Strongknot</div>
-      <div>
-        <button className="header-button" name="Article" onClick={showComponent}>Article</button>
-        <button className="header-button" name="AddArticle" onClick={showComponent}>Add Article</button>
-        <button className="header-button" name="Profile" onClick={showComponent}>{name}</button>
+    <div className="header">
+      <div className="logo">Strongknot</div>
+      <div className="all-header-button">
+        <Link to="/">
+          <button className="header-button">Article</button>
+        </Link>
+        <Link to="/add-article">
+          <button className="header-button">Add Article</button>
+        </Link>
+        <Link to="/profile">
+         <button className="header-button">Profile</button>
+        </Link>
       </div>
+      <div className="user">{name}</div>
     </div>
   )
 }
 
 Header.propTypes = {
-  updateData: PropTypes.func,
-  name: PropTypes.string,
-  updateProfile: PropTypes.func
+  name: PropTypes.string
 }
 
 export default Header

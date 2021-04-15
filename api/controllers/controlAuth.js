@@ -3,7 +3,6 @@ const mailer = require('../routes/nodemailer')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 require('dotenv').config()
-let number
 
 module.exports.login  = async (req, res) => {
   const person = await db('users').where({email: req.body.email}).first()
@@ -18,7 +17,7 @@ module.exports.login  = async (req, res) => {
           last_name: person.last_name,
           password: person.password,
           activated: person.activated
-        }, process.env.JWT_KEY, {expiresIn: 3600})
+        }, process.env.JWT_KEY, {expiresIn: 43200})
 
         res.status(200).json({
           token: `Bearer ${token}`
@@ -43,6 +42,9 @@ module.exports.login  = async (req, res) => {
 module.exports.check  = async (req, res) => {
   const person = await db('users').where({email: req.body.email}).first()
   if (person) {
+    const array = req.body.email.split('@')
+    const number = array[0].length * process.env.CODE
+    console.log(number)
     if(Number(req.body.code) === number){
       await db('users').where({email: req.body.email}).update({activated: true})
 
@@ -79,7 +81,8 @@ module.exports.register = async (req, res) => {
         password: bcrypt.hashSync(pass, salt)
       })
 
-      number = Math.floor(Math.random() * (9999 - 1000)) + 1000
+      const array = req.body.email.split('@')
+      const code = array[0].length * process.env.CODE
 
       const message = {
         from: 'nekryto@ukr.net',
@@ -89,7 +92,7 @@ module.exports.register = async (req, res) => {
         
         Данные для следующего этапа:
         email: ${req.body.email}
-        code: ${number}
+        code: ${code}
         
         Вот ссылка: http://${process.env.HOST}:${process.env.PORT}/api/auth/check`
       }
