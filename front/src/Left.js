@@ -10,6 +10,9 @@ function Left () {
         <Link to="/add-avatar">
           <button className='sign'>Add avatar</button>
         </Link>
+        <Link to="/own-comments">
+          <button className='sign'>View my comments</button>
+        </Link>
       </div>
   )
 }

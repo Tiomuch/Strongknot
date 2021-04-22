@@ -13,10 +13,15 @@ import Register from './Auth/Registration'
 import EmailCheck from './Auth/EmailCheck'
 import Login from './Auth/Login'
 import AddAvatar from './ForLeft/AddAvatar'
+import ShowComments from './ForRight/ShowComments'
+import AddComment from './ForRight/AddComment'
+import OwnComments from './ForLeft/OwnComments'
+import EditComment from './ForRight/EditComment'
 
 function App () {
   const [profile, setProfile] = useState('User') // eslint-disable-line no-unused-vars
   const [post, setPost] = useState()
+  const [comment, setComment] = useState()
 
   const checkProfile = (name, lastName) => {
     if (name && lastName && name !== '' && lastName !== '') {
@@ -34,6 +39,10 @@ function App () {
     setPost(data)
   }
 
+  const updateComment = (data) => {
+    setComment(data)
+  }
+
   return (
     <Router>
       <ErrorBoundary>
@@ -42,23 +51,27 @@ function App () {
       <div className="main-part">
       <ErrorBoundary>
         <Switch>
-          <Route path={['/', '/add-article', '/profile', '/login']} exact component={Left}/>
+          <Route path={['/', '/add-article', '/profile', '/login', '/comments', '/add-comment', '/edit-comment']} exact component={Left}/>
           <Route exact path="/edit-post" render={props => <EditArticle post={post} />} />
           <Route path="/add-avatar" exact render={props => <AddAvatar />} />
           <Route path="/edit-profile" exact render={props => <EditProfile />} />
+          <Route path="/own-comments" exact render={props => <OwnComments updateComment={updateComment} />} />
         </Switch>
       </ErrorBoundary>
       <ErrorBoundary>
-        <Route path="/" render={props => <ForPosts updatePost={updatePost} checkProfile={checkProfile} />} />
+        <Route path="/" render={props => <ForPosts checkProfile={checkProfile} updateComment={updateComment} />} />
       </ErrorBoundary>
       <ErrorBoundary>
         <Switch>
-          <Route path={['/', '/edit-post', '/edit-profile', '/add-avatar']} exact render={props => <Article updatePost={updatePost} />} />
+          <Route path={['/', '/edit-post', '/edit-profile', '/add-avatar', '/own-comments']} exact render={props => <Article updatePost={updatePost} />} />
           <Route path="/add-article" exact component={AddArticle} />
           <Route path="/register" exact component={Register} />
           <Route path="/check" exact component={EmailCheck} />
           <Route path="/login" exact render={props => <Login updateProfile={updateProfile} />} />
           <Route path="/profile" exact render={props => <Profile updateProfile={updateProfile} />} />
+          <Route exact path="/comments" render={props => <ShowComments comment={comment} />} />
+          <Route exact path="/add-comment" render={props => <AddComment comment={comment} />} />
+          <Route exact path="/edit-comment" render={props => <EditComment comment={comment} />} />
         </Switch>
       </ErrorBoundary>
       </div>

@@ -63,6 +63,28 @@ router.post('/add-friend', async (req, res) => {
   }
 })
 
+router.post('/accept-friend/:id', async (req, res) => {
+  try {
+    await db('friend').where({user_id: req.user[0].id, with_user_id: req.params.id}).update({accepted: true})
+
+    res.status(202).json({
+      message: 'Друг принят'
+    })
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+router.post('/friends', async (req, res) => {
+  try {
+    const friends = await db('friend').select('*').where({user_id: req.user[0].id})
+
+    res.status(202).json(friends)
+  } catch (e) {
+    console.log(e)
+  }
+})
+
 router.delete('/delete-friend/:id', async (req, res) => {
   try {
     const friend = await db('friend').select('*').where({friend_id: req.params.id}).first()

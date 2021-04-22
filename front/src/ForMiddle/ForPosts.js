@@ -1,13 +1,14 @@
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 const queryClient = new QueryClient()
 
-export default function ForPosts ({ checkProfile }) {
+export default function ForPosts ({ checkProfile, updateComment }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <AllPosts checkProfile={checkProfile} />
+      <AllPosts checkProfile={checkProfile} updateComment={updateComment} />
     </QueryClientProvider>
   )
 }
@@ -19,7 +20,7 @@ const fetchPosts = async () => {
   return res.json()
 }
 
-function AllPosts ({ checkProfile }) {
+function AllPosts ({ checkProfile, updateComment }) {
   const { isLoading, error, data } = useQuery('posts', fetchPosts)
   const [visible, setVisible] = useState(5)
 
@@ -30,6 +31,10 @@ function AllPosts ({ checkProfile }) {
     if (visible >= data.length) {
       alert('No more items')
     }
+  }
+
+  const findComment = async (e) => {
+    updateComment(Number(e.target.name))
   }
 
   if (isLoading) return <h1 className="content">Loading...</h1>
@@ -45,6 +50,12 @@ function AllPosts ({ checkProfile }) {
           <div className="post-top">{post.title}</div>
           { post.image ? <div className='post-top'><img className='image' src={'http://localhost:3000/' + post.image} alt='image' /></div> : <></> }
           <div className="post-down">{post.description}</div>
+          <Link to="/comments">
+            <button className="sign" name={post.id} onClick={findComment}>Show comments</button>
+          </Link>
+          <Link to="/add-comment">
+            <button className="sign" name={post.id} onClick={findComment}>Add comment</button>
+          </Link>
         </li>)}
         <button className="sign" onClick={showMoreItems}>Load more</button>
       </ul>
@@ -53,9 +64,11 @@ function AllPosts ({ checkProfile }) {
 }
 
 ForPosts.propTypes = {
-  checkProfile: PropTypes.func
+  checkProfile: PropTypes.func,
+  updateComment: PropTypes.func
 }
 
 AllPosts.propTypes = {
-  checkProfile: PropTypes.func
+  checkProfile: PropTypes.func,
+  updateComment: PropTypes.func
 }

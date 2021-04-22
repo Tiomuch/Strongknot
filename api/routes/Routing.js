@@ -78,7 +78,7 @@ router.get('/own', async (req, res) => {// посты конкретного ю�
   const posts = await db('posts').select('*').where({userid: req.user[0].id})
 
   if (posts.length !== 0) {
-    res.json(posts)
+    res.status(202).json(posts)
   } else {
     res.status(422).json({
       message: 'Нету постов'

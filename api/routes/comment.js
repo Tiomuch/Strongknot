@@ -25,12 +25,12 @@ niv.extend('unique', async ({ value, args }) => {
 })
 
 router.post('/create-comment',async (req, res) => {
-  const comments = await db('comments').select('*').groupBy("comment_id")
+  const comments = await db('comments').select('*').orderBy("comment_id")
 
   if (comments.length === 0) {
     req.body.comment_id = 1
   } else {
-    const newID = Number(comments[comments.length - 1].comment_id) + 1
+    const newID = Number(comments[comments.length-1].comment_id) + 1
     req.body.comment_id = newID
   }
 
@@ -70,6 +70,18 @@ router.post('/create-comment',async (req, res) => {
     req.body = v.errors
     res.status(422).json({
       message: 'Данные не верны'
+    })
+  }
+})
+
+router.get('/own', async (req, res) => {
+  const posts = await db('comments').select('*').where({user_id: req.user[0].id})
+
+  if (posts.length !== 0) {
+    res.status(202).json(posts)
+  } else {
+    res.status(422).json({
+      message: 'Нету комментариев'
     })
   }
 })
