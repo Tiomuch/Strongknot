@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Article from './ForHeader/Article' // eslint-disable-line no-unused-vars
-import AddArticle from './ForHeader/AddArticle' // eslint-disable-line no-unused-vars
-import Profile from './ForHeader/Profile' // eslint-disable-line no-unused-vars
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import axios from 'axios'

@@ -129,6 +129,7 @@ li {
   justify-content: space-around;
   align-items: center;
   color: black;
+  flex-direction: column;
   height: 100%;
   width: 100%;
   font-size: 40px;

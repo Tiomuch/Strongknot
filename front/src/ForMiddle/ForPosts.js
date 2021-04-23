@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 const queryClient = new QueryClient()
 
@@ -23,6 +24,8 @@ const fetchPosts = async () => {
 function AllPosts ({ checkProfile, updateComment }) {
   const { isLoading, error, data } = useQuery('posts', fetchPosts)
   const [visible, setVisible] = useState(5)
+  const [quanComment, setComm] = useState(0) // eslint-disable-line no-unused-vars
+  const [quanLikes, setLikes] = useState(0)
 
   checkProfile(localStorage.getItem('first_name'), localStorage.getItem('last_name'))
 
@@ -30,6 +33,36 @@ function AllPosts ({ checkProfile, updateComment }) {
     setVisible(prevValue => prevValue + 5)
     if (visible >= data.length) {
       alert('No more items')
+    }
+  }
+
+  const takeQuantityComment = async (e) => {
+    try {
+      await axios.get(`http://localhost:3000/api/comments/quantity/${Number(e.target.name)}`, { method: 'GET', // eslint-disable-line object-curly-newline
+        headers: { Authorization: localStorage.getItem('token') } }).then(res => { // eslint-disable-line object-curly-newline
+        setComm(res.data)
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const Like = async (e) => {
+    try {
+
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const takeQuantityLikes = async (e) => {
+    try {
+      await axios.get(`http://localhost:3000/api/posts/likes/${Number(e.target.name)}`, { method: 'GET', // eslint-disable-line object-curly-newline
+        headers: { Authorization: localStorage.getItem('token') } }).then(res => { // eslint-disable-line object-curly-newline
+        setLikes(res.data)
+      })
+    } catch (err) {
+      console.log(err)
     }
   }
 
@@ -50,6 +83,9 @@ function AllPosts ({ checkProfile, updateComment }) {
           <div className="post-top">{post.title}</div>
           { post.image ? <div className='post-top'><img className='image' src={'http://localhost:3000/' + post.image} alt='image' /></div> : <></> }
           <div className="post-down">{post.description}</div>
+          <button className="sign" name={post.id} onClick={takeQuantityComment}>Comments: {quanComment}</button>
+          <button className="sign" name={post.id} onClick={takeQuantityLikes}>Likes: {quanLikes}</button>
+          <button className="sign" name={post.id} onClick={Like}>Like</button>
           <Link to="/comments">
             <button className="sign" name={post.id} onClick={findComment}>Show comments</button>
           </Link>

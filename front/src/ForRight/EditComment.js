@@ -14,7 +14,7 @@ function editComment ({ comment }) {
     values.date = Dat.getFullYear() + '-' + mon + '-' + Dat.getDate()
 
     try {
-      await axios.post(`http://localhost:3000/api/comments/edit-comment/${comment.id}`, values, { headers: { Authorization: localStorage.getItem('token') } }).then(res => console.log(res)) // eslint-disable-line object-curly-newline
+      await axios.post(`http://localhost:3000/api/comments/edit-comment/${comment.comment_id}`, values, { headers: { Authorization: localStorage.getItem('token') } }).then(res => console.log(res)) // eslint-disable-line object-curly-newline
       alert('Post has been edited')
     } catch (e) {
       console.log(e)

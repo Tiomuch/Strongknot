@@ -35,11 +35,12 @@ function Comments ({ updateComment }) {
   const infComment = (comm) => {
     let one
     for (let i = 0; i < data.length; i++) {
-      if (data[i].id === comm.target.name) {
+      if (data[i].comment_id === Number(comm.target.name)) {
         one = data[i]
       }
     }
     updateComment(one)
+    console.log(one)
   }
 
   const deleteComment = async (comm) => {
@@ -56,13 +57,14 @@ function Comments ({ updateComment }) {
   } else {
     return (
       <ul className="content">
-        {data.slice(0, visible).map(comm => <li key={comm.id} className="for-li">
+        {data.slice(0, visible).map(comm => <li key={comm.comment_id} className="for-li">
           <Link to="/edit-comment">
-            <button className="edit" name={comm.id} onClick={infComment}>Edit Comment</button>
+            <button className="edit" name={comm.comment_id} onClick={infComment}>Edit Comment</button>
           </Link>
-          <button className="delete" name={comm.id} onClick={deleteComment}>Delete Comment</button>
+          <button className="delete" name={comm.comment_id} onClick={deleteComment}>Delete Comment</button>
+          <div className="post-top">{comm.post_id}</div>
           <div className="post-top">{comm.text}</div>
-          <div className="post-down">{comm.data}</div>
+          <div className="post-down">{comm.date}</div>
         </li>)}
         <button className="sign" onClick={showMoreItems}>Load more</button>
       </ul>

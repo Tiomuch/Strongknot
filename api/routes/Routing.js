@@ -143,13 +143,7 @@ router.get('/likes/:id', async (req, res) => {
   if (post) {
     const likes = await db('likes').select('*').where({posts_id: req.params.id})
 
-    if (likes.length !== 0) {
-      res.json(likes)
-    } else {
-      res.status(422).json({
-        message: 'Нету лайков'
-      })
-    }
+    res.status(202).json(likes.length)
   } else {
     res.status(422).json({
       message: 'Нету поста'
@@ -157,8 +151,8 @@ router.get('/likes/:id', async (req, res) => {
   }
 })
 
-router.post('/add-like', async (req, res) => {
-  const post = await db('posts').select('*').where({id: req.body.id}).first()
+router.post('/add-like/:id', async (req, res) => {
+  const post = await db('posts').select('*').where({id: req.params.id}).first()
   if (!post) {
     res.status(422).json({
       message: 'Нету поста'
@@ -205,6 +199,10 @@ router.delete('/del-like/:id', async (req, res) => {
   } catch (e) {
     console.log(e)
   }
+})
+
+router.post('/like/:id', async (req, res) => {
+  const like = await db('likes').where({})
 })
 
 module.exports = router

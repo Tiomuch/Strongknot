@@ -90,11 +90,21 @@ router.get('/:id', async (req, res) => {// комменты к  одному п�
   const comments = await db('comments').select('*').where({post_id: req.params.id})
 
   if (comments.length !== 0) {
-    res.json(comments)
+    res.status(202).json(comments)
   } else {
     res.status(422).json({
       message: 'Нету комментов'
     })
+  }
+})
+
+router.get('/quantity/:id', async (req, res) => {
+  const comments = await db('comments').select('*').where({post_id: req.params.id})
+
+  if (comments !== 0) {
+    res.status(202).json(comments.length)
+  } else {
+    res.status(202).json(0)
   }
 })
 
