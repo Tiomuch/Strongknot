@@ -13,6 +13,15 @@ function Left () {
         <Link to="/own-comments">
           <button className='sign'>View my comments</button>
         </Link>
+        <Link to="/users">
+          <button className='sign'>View all users</button>
+        </Link>
+        <Link to="/friends">
+          <button className='sign'>View your friend</button>
+        </Link>
+        <Link to="/req-friend">
+          <button className='sign'>View request to you</button>
+        </Link>
       </div>
   )
 }

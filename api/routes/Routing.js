@@ -158,7 +158,7 @@ router.post('/add-like/:id', async (req, res) => {
       message: 'Нету поста'
     })
   } else {
-    const likes = await db('likes').select('*').groupBy("likes_id")
+    const likes = await db('likes').select('*').orderBy("likes_id")
     if (likes.length === 0) {
       req.body.like_id = 1
     } else {
@@ -169,11 +169,11 @@ router.post('/add-like/:id', async (req, res) => {
     try {
       await db('likes').insert({
         likes_id: req.body.like_id,
-        posts_id: req.body.id,
+        posts_id: req.params.id,
         users_id: req.user[0].id
       })
 
-      res.status(201).json(req.body)
+      res.status(202).json(req.body)
     } catch (e) {
       console.log(e)
     }
@@ -182,10 +182,10 @@ router.post('/add-like/:id', async (req, res) => {
 
 router.delete('/del-like/:id', async (req, res) => {
   try {
-    const like = await db('likes').select('*').where({likes_id: req.params.id}).first()
+    const like = await db('likes').select('*').where({posts_id: req.params.id, users_id: req.user[0].id}).first()
 
     if (like) {
-      await db('likes').where({likes_id: req.params.id}).del()
+      await db('likes').where({likes_id: like.likes_id}).del()
 
       res.status(201).json({
         message: 'Лайк удален'
@@ -201,8 +201,19 @@ router.delete('/del-like/:id', async (req, res) => {
   }
 })
 
-router.post('/like/:id', async (req, res) => {
-  const like = await db('likes').where({})
+router.get('/like/:id', async (req, res) => {
+  try {
+    const like = await db('likes').select('*').where({posts_id: req.params.id, users_id: req.user[0].id}).first()
+
+    if (like) {
+      res.status(202).json(false)
+    } else {
+      res.status(202).json(true)
+    }
+
+  } catch (e) {
+    console.log(e)
+  }
 })
 
 module.exports = router

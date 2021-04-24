@@ -49,7 +49,23 @@ function AllPosts ({ checkProfile, updateComment }) {
 
   const Like = async (e) => {
     try {
+      let result
+      await axios.get(`http://localhost:3000/api/posts/like/${Number(e.target.name)}`, { method: 'GET', // eslint-disable-line object-curly-newline
+        headers: { Authorization: localStorage.getItem('token') } }).then(res => { // eslint-disable-line object-curly-newline
+        result = res.data
+      })
 
+      if (result === true) {
+        await axios(`http://localhost:3000/api/posts/add-like/${Number(e.target.name)}`, { method: 'POST', // eslint-disable-line object-curly-newline
+          headers: { Authorization: localStorage.getItem('token') } }).then(res => { // eslint-disable-line object-curly-newline
+          alert('You liked post')
+        })
+      } else {
+        await axios.delete(`http://localhost:3000/api/posts/del-like/${Number(e.target.name)}`, { method: 'DELETE', // eslint-disable-line object-curly-newline
+          headers: { Authorization: localStorage.getItem('token') } }).then(res => { // eslint-disable-line object-curly-newline
+          alert('You unliked post')
+        })
+      }
     } catch (err) {
       console.log(err)
     }

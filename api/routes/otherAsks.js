@@ -6,8 +6,8 @@ const db = require('./forDB.js')
 const passport = require('passport')
 const niv  = require('node-input-validator')
 
-router.get('/', async (rec, res)=> {
-  const users = await db('users').select('*')
+router.get('/users', async (req, res)=> {
+  const users = await db('users').where('id', '<>', req.user[0].id)
   res.json(users)
 })
 
@@ -41,7 +41,7 @@ router.get('/get-avatar', async (req, res) => {
   }
 })
 
-router.post('/add-friend', async (req, res) => {
+router.post('/add-friend/:id', async (req, res) => {
   const friends = await db('friend').select('*').groupBy("friend_id")
   if (friends.length === 0) {
     req.body.friend_id = 1
@@ -54,7 +54,7 @@ router.post('/add-friend', async (req, res) => {
     await db('friend').insert({
       friend_id: req.body.friend_id,
       user_id: req.user[0].id,
-      with_user_id: req.body.id
+      with_user_id: req.params.id
     })
 
     res.status(201).json(req.body)
@@ -65,7 +65,7 @@ router.post('/add-friend', async (req, res) => {
 
 router.post('/accept-friend/:id', async (req, res) => {
   try {
-    await db('friend').where({user_id: req.user[0].id, with_user_id: req.params.id}).update({accepted: true})
+    await db('friend').where({user_id: req.params.id, with_user_id: req.user[0].id}).update({accepted: true})
 
     res.status(202).json({
       message: 'Друг принят'
@@ -75,9 +75,9 @@ router.post('/accept-friend/:id', async (req, res) => {
   }
 })
 
-router.post('/friends', async (req, res) => {
+router.get('/friends', async (req, res) => {
   try {
-    const friends = await db('friend').select('*').where({user_id: req.user[0].id})
+    const friends = await db('friend').select('*').where({with_user_id: req.user[0].id, accepted: true})
 
     res.status(202).json(friends)
   } catch (e) {
@@ -85,14 +85,30 @@ router.post('/friends', async (req, res) => {
   }
 })
 
+router.get('/pre-friends', async (req, res) => {
+  try {
+    const friends = await db('friend').select('*').where({with_user_id: req.user[0].id, accepted: null})
+
+    if (friends.length !== 0) {
+      res.status(202).json(friends)
+    } else {
+      res.status(404).json({
+        message: 'No friends'
+      })
+    }
+  } catch (e) {
+    console.log(e)
+  }
+})
+
 router.delete('/delete-friend/:id', async (req, res) => {
   try {
-    const friend = await db('friend').select('*').where({friend_id: req.params.id}).first()
+    const friend = await db('friend').select('*').where({user_id: req.params.id, with_user_id: req.user[0].id}).first()
 
     if (friend) {
-      await db('friend').where({friend_id: req.params.id}).del()
+      await db('friend').where({user_id: req.params.id, with_user_id: req.user[0].id}).del()
 
-      res.status(201).json({
+      res.status(202).json({
         message: 'Друг удалён'
       })
     } else {
@@ -103,6 +119,16 @@ router.delete('/delete-friend/:id', async (req, res) => {
 
   } catch (e) {
     console.log(e)
+  }
+})
+
+router.get('/check-friend/:id', async (req, res) => {
+  const friend = await db('friend').select('*').where({user_id: req.params.id, with_user_id: req.user[0].id}).first()
+
+  if (friend) {
+    res.status(202).json(true)
+  } else {
+    res.status(202).json(false)
   }
 })
 
