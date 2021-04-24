@@ -1,9 +1,6 @@
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 import React, { useState } from 'react'
 import axios from 'axios'
-/* import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
-import axios from 'axios' */
 
 const queryClient = new QueryClient()
 
@@ -16,10 +13,10 @@ export default function Friends () {
 }
 
 const fetchFriends = async () => {
-  const res = await fetch('http://localhost:3000/api/other/friends', { method: 'GET', // eslint-disable-line object-curly-newline
+  const result = await fetch('http://localhost:3000/api/other/friends', { method: 'GET', // eslint-disable-line object-curly-newline
     headers: { Authorization: localStorage.getItem('token') }
   })
-  return res.json()
+  return result.json()
 }
 
 function AllFriends () {

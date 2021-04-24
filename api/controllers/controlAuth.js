@@ -16,7 +16,6 @@ module.exports.login  = async (req, res) => {
           userID: person.id,
           first_name: person.first_name,
           last_name: person.last_name,
-          password: person.password,
           activated: person.activated
         }, process.env.JWT_KEY, {expiresIn: 43200})
 

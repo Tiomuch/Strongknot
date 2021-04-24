@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import Header from './Header'
+import Header from './MainComponents/Header'
 import ForPosts from './ForMiddle/ForPosts'
-import Left from './Left'
+import Left from './MainComponents/Left'
 import Article from './ForHeader/Article'
 import AddArticle from './ForHeader/AddArticle'
 import Profile from './ForHeader/Profile'
@@ -63,7 +63,7 @@ function App () {
       </ErrorBoundary>
       <ErrorBoundary>
         <Switch>
-          <Route path={['/', '/friends', '/req-friend']} exact render={props => <ForPosts checkProfile={checkProfile} updateComment={updateComment} />} />
+          <Route path={['/', '/friends', '/req-friend', '/add-article', '/profile']} exact render={props => <ForPosts checkProfile={checkProfile} updateComment={updateComment} />} />
           <Route path="/users" exact render={props => <AllUsers />} />
         </Switch>
       </ErrorBoundary>
