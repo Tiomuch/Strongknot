@@ -1,21 +1,162 @@
 const express = require('express')
 const router = express.Router()
+const upload = require('../middleware/upload')
 require('dotenv').config()
 const db = require('./forDB.js')
 const passport = require('passport')
+const niv  = require('node-input-validator')
 
-router.get('/', async (rec, res)=> {
-  const users = await db('users').select('*')
+router.get('/users', async (req, res)=> {
+  const users = await db('users').where('id', '<>', req.user[0].id)
   res.json(users)
 })
 
-router.use( (req, res, next) => {
-  console.log('We are in')
-  next()
+router.post('/avatar', upload.single('avatar'), async (req, res) => {
+  const avatar = req.file ? req.file.path : ''
+
+  if (avatar === '') {
+    res.status(400).json({
+      message: 'Нету аватарки'
+    })
+  } else {
+    try {
+      await db('users').where({id: req.user[0].id}).update({avatar: avatar})
+
+      res.status(202).json({
+        message: 'Аватар добавлен'
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
 })
 
-router.get('/', (req, res) => {
-  res.send('Hello World!')
+router.get('/get-avatar', async (req, res) => {
+  try {
+    const personAvatar = await db('users').where({id: req.user[0].id}).select('avatar').first()
+
+    res.status(202).json(personAvatar)
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+router.post('/add-friend/:id', async (req, res) => {
+  const friends = await db('friend').select('*').groupBy("friend_id")
+  if (friends.length === 0) {
+    req.body.friend_id = 1
+  } else {
+    const newID = Number(friends[friends.length - 1].friend_id) + 1
+    req.body.friend_id = newID
+  }
+
+  try {
+    await db('friend').insert({
+      friend_id: req.body.friend_id,
+      user_id: req.user[0].id,
+      with_user_id: req.params.id
+    })
+
+    res.status(201).json(req.body)
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+router.post('/accept-friend/:id', async (req, res) => {
+  try {
+    await db('friend').where({user_id: req.params.id, with_user_id: req.user[0].id}).update({accepted: true})
+
+    res.status(202).json({
+      message: 'Друг принят'
+    })
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+router.get('/friends', async (req, res) => {
+  try {
+    const friends = await db('friend').select('*').where({with_user_id: req.user[0].id, accepted: true})
+
+    res.status(202).json(friends)
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+router.get('/pre-friends', async (req, res) => {
+  try {
+    const friends = await db('friend').select('*').where({with_user_id: req.user[0].id, accepted: null})
+
+    if (friends.length !== 0) {
+      res.status(202).json(friends)
+    } else {
+      res.status(404).json({
+        message: 'No friends'
+      })
+    }
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+router.delete('/delete-friend/:id', async (req, res) => {
+  try {
+    const friend = await db('friend').select('*').where({user_id: req.params.id, with_user_id: req.user[0].id}).first()
+
+    if (friend) {
+      await db('friend').where({user_id: req.params.id, with_user_id: req.user[0].id}).del()
+
+      res.status(202).json({
+        message: 'Друг удалён'
+      })
+    } else {
+      res.status(422).json({
+        message: 'Такого друга нет'
+      })
+    }
+
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+router.get('/check-friend/:id', async (req, res) => {
+  const friend = await db('friend').select('*').where({user_id: req.params.id, with_user_id: req.user[0].id}).first()
+
+  if (friend) {
+    res.status(202).json(true)
+  } else {
+    res.status(202).json(false)
+  }
+})
+
+router.post('/edit-profile', async (req, res) => {
+  const v = new niv.Validator(req.body, {
+    first_name: 'required|maxLength:50|minLength:1',
+    last_name: 'required|minLength:1|maxLength:50'
+  })
+
+  const matched = await v.check()
+
+  if (matched) {
+    try {
+      await db('users').where({id: req.user[0].id}).update({
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+      })
+
+      res.status(201).json(req.body)
+    } catch (e) {
+      console.log(e)
+    }
+  } else {
+    req.body = v.errors
+    res.status(422).json({
+      message: 'Данные не верны'
+    })
+  }
 })
 
 module.exports = router
